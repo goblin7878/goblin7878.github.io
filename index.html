@@ -71,46 +71,501 @@
       <div class="outer">
         <section id="main">
   
-    <article id="post-hello-world" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+    <article id="post-asong" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
   <div class="article-meta">
-    <a href="/2026/02/22/hello-world/" class="article-date">
-  <time class="dt-published" datetime="2026-02-22T09:25:27.610Z" itemprop="datePublished">2026-02-22</time>
+    <a href="/2026/02/27/asong/" class="article-date">
+  <time class="dt-published" datetime="2026-02-26T21:02:28.272Z" itemprop="datePublished">2026-02-27</time>
 </a>
     
   </div>
   <div class="article-inner">
     
     
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="p-name article-title" href="/2026/02/22/hello-world/">Hello World</a>
-    </h1>
-  
-
-      </header>
-    
     <div class="e-content article-entry" itemprop="articleBody">
       
-        <p>Welcome to <a target="_blank" rel="noopener" href="https://hexo.io/">Hexo</a>! This is your very first post. Check <a target="_blank" rel="noopener" href="https://hexo.io/docs/">documentation</a> for more info. If you get any problems when using Hexo, you can find the answer in <a target="_blank" rel="noopener" href="https://hexo.io/docs/troubleshooting.html">troubleshooting</a> or you can ask me on <a target="_blank" rel="noopener" href="https://github.com/hexojs/hexo/issues">GitHub</a>.</p>
-<h2 id="Quick-Start"><a href="#Quick-Start" class="headerlink" title="Quick Start"></a>Quick Start</h2><h3 id="Create-a-new-post"><a href="#Create-a-new-post" class="headerlink" title="Create a new post"></a>Create a new post</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo new <span class="string">&quot;My New Post&quot;</span></span><br></pre></td></tr></table></figure>
-
-<p>More info: <a target="_blank" rel="noopener" href="https://hexo.io/docs/writing.html">Writing</a></p>
-<h3 id="Run-server"><a href="#Run-server" class="headerlink" title="Run server"></a>Run server</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo server</span><br></pre></td></tr></table></figure>
-
-<p>More info: <a target="_blank" rel="noopener" href="https://hexo.io/docs/server.html">Server</a></p>
-<h3 id="Generate-static-files"><a href="#Generate-static-files" class="headerlink" title="Generate static files"></a>Generate static files</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo generate</span><br></pre></td></tr></table></figure>
-
-<p>More info: <a target="_blank" rel="noopener" href="https://hexo.io/docs/generating.html">Generating</a></p>
-<h3 id="Deploy-to-remote-sites"><a href="#Deploy-to-remote-sites" class="headerlink" title="Deploy to remote sites"></a>Deploy to remote sites</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo deploy</span><br></pre></td></tr></table></figure>
-
-<p>More info: <a target="_blank" rel="noopener" href="https://hexo.io/docs/one-command-deployment.html">Deployment</a></p>
+        <p>title: 学习<br>date: 2026-2-26</p>
+<p>学到知识点：<br>类似于base系列的 字节串分割编码技巧。<br>字符频率统计算法识别。<br>题解：<br>题目地址：攻防世界 (xctf.org.cn)</p>
+<p>ida进入，可以看到就几个函数，进去逐一分析功能：首先时接受用户的输入，再check一下flag的形式，接着读取girl文件来初始化v4，最后进行flag的加密。</p>
+<p>sub_400bf这个函数</p>
+<p>直接从girl函数开始分析，使用循环每次只读取一位字符，利用change_num函数转化为数字v2后，在相对a2偏移为4*v2处记录下该字符出现的次数，所以这是一个统计字符频率的函数，change_num将字符转化为数字下标。<br><img src="/image-10.png" alt="alt text"></p>
+<p>进入change_num函数：将输入的字符，转化为对应的下标，大小写不进行区分统一为10~35（转化出来的数字时对应字符在v4中的下标）。</p>
+<p><img src="/image-11.png" alt="alt text"><br>进入encode函数，这里for循环中的 a2 与前面计算字符频率时的 a2 代表的地址相同，所以for循环中的操作相当于对输入的 flag字符 ，将其 ASCII码 转化为字符在歌词中出现的 频率 。<br><img src="/image-12.png" alt="alt text"></p>
+<p>进入change_sit函数：里面根据一个dword_6020A0数组的，来交换v5数组上的数据，具体的逻辑就是：取dword_6020A0数组上面第i个值j，以此为下标，用v5[j]覆盖v5[i]，简而言之就是 替换 。<br><img src="/image-13.png" alt="alt text"></p>
+<p>进入split函数：对输入的v5进行一个切分，二进制下，当前位的第5位与后一位的高三位组成一个新的值，放入当前位。</p>
+<p><img src="/image-14.png" alt="alt text"><br>后面对其逐一逆向，首先逆向切分：<br>#分割bit串<br>for i in range(len(a)):<br>    print(‘{:0&gt;8}’.format(bin(a[i])[2:]),end&#x3D;””)<br>print()<br>#001 11101将切分出来的末三位，手动放到字节串前面<br>res&#x3D;’0011110110000101001111000110100000111100001111101111010101000011101001010011110110100101001100110010011100111110011101101111010100111100111101011000010101110110111101010110100000010011111101010010011000100110101001011000010100111101111101010000011110101001011101100001110100111100001011010000111101101000’<br>for i in range(0,len(res),8):<br>  print(hex(int(res[i:i+8],2)),end&#x3D;”,”)<br>一键获取完整项目代码<br>python<br>1<br>2<br>3<br>4<br>5<br>6<br>7<br>8<br>字频替换（交换位置change_sit加密，逆向的顺序先做后做无所谓）：<br>#字符频率表需要事先准备<br>mapp&#x3D;{‘ ‘: 71, “‘“: 40, ‘<em>‘: 245, ‘a’: 104, ‘c’: 15, ‘b’: 30, ‘e’: 169, ‘d’: 29, ‘g’: 38, ‘f’: 19, ‘i’: 60, ‘h’: 67, ‘k’: 20, ‘m’: 28, ‘l’: 39, ‘o’: 165, ‘n’: 118, ‘p’: 26, ‘s’: 51, ‘r’: 61, ‘u’: 45, ‘t’: 133, ‘w’: 34, ‘v’: 7, ‘y’: 62}<br>#that_girl词频统计<br>value&#x3D;[71, 40, 245, 104, 15, 30, 169, 29, 38, 19, 60, 67, 20, 28, 39, 165, 118, 26, 51, 61, 45, 133, 34, 7, 62]<br>key&#x3D;[‘ ‘, “‘“, ‘</em>‘, ‘a’, ‘c’, ‘b’, ‘e’, ‘d’, ‘g’, ‘f’, ‘i’, ‘h’, ‘k’, ‘m’, ‘l’, ‘o’, ‘n’, ‘p’, ‘s’, ‘r’, ‘u’, ‘t’, ‘w’, ‘v’, ‘y’]<br>#查字频表<br>res_1&#x3D;[0x3d,0x85,0x3c,0x68,0x3c,0x3e,0xf5,0x43,0xa5,0x3d,<br>0xa5,0x33,0x27,0x3e,0x76,0xf5,0x3c,0xf5,0x85,0x76,0xf5,<br>0x68,0x13,0xf5,0x26,0x26,0xa5,0x85,0x3d,0xf5,0x7,0xa9,0x76,<br>0x1d,0x3c,0x2d,0xf,0x68]<br>for i in range(len(res_1)):<br>  print(ord(key[value.index(res_1[i])]),end&#x3D;”,”)</p>
+<p>一键获取完整项目代码<br>python</p>
+<p>1<br>2<br>3<br>4<br>5<br>6<br>7<br>8<br>9<br>10<br>11<br>12<br>13<br>位置交换逆向：<br>#改变顺序的解<br>s&#x3D;[22,   0,   6,   2,  30,<br>   24,   9,   1,  21,   7,<br>   18,  10,   8,  12,  17,<br>   23,  13,   4,   3,  14,<br>   19,  11,  20,  16,  15,<br>    5,  25,  36,  27,  28,<br>   29,  37,  31,   33, 32,<br>   26,  34,  35]</p>
+<p>i &#x3D; 1	#最后一个被覆盖的位置是第 s.index[0]&#x3D;1，这里i取多少都无所谓，判断条件一起更改即可<br>temp &#x3D; flag[i] #保存一下覆盖的值<br>while s.index(i) !&#x3D; 1:<br>    flag[i] &#x3D; flag[s.index(i)]<br>    i &#x3D; s.index(i)		#用当前i的下标值更新i<br>flag[i]&#x3D;temp<br>print(flag)<br>for i in range(len(flag)):<br>  print(chr(flag[i]),end&#x3D;””)<br>#that_girl_saying_no_fo@_your_vinidcate<br>一键获取完整项目代码<br>python</p>
+<p>————————————————<br>版权声明：本文为CSDN博主「波克比QWQ」的原创文章，遵循CC 4.0 BY-SA版权协议，转载请附上原文出处链接及本声明。<br>原文链接：<a target="_blank" rel="noopener" href="https://blog.csdn.net/yjh_fnu_ltn/article/details/139127760">https://blog.csdn.net/yjh_fnu_ltn/article/details/139127760</a></p>
 
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2026/02/22/hello-world/" data-id="cuid5q9jh7BFPBT9Zyuy8GQpo" data-title="Hello World" class="article-share-link"><span class="fa fa-share">Share</span></a>
+      <a data-url="http://example.com/2026/02/27/asong/" data-id="cuidyi5G69tsyAaqC9ols74EI" data-title="" class="article-share-link"><span class="fa fa-share">Share</span></a>
+      
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+
+  
+    <article id="post-first" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2026/02/27/first/" class="article-date">
+  <time class="dt-published" datetime="2026-02-26T20:55:53.223Z" itemprop="datePublished">2026-02-27</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <p>title: 学习<br>date: 2026-1-31</p>
+<p>将文件导入ida，查看main函数的代码<br><img src="/image-3.png" alt="alt text"></p>
+<p>我们直接看最后的关键字符串，发现flag就存在unk_602220数组当中，因此关键点就在于怎么得到该数组的值</p>
+<p><img src="/image-4.png" alt="alt text"></p>
+<p>往上一步步追踪，发现了一个关键的循环，该循环将原unk_602220数组中的字符与已知数组的值和v10进行了异或操作，然后将结果存入byte_60221F数组的从1索引开始的位置并以此往后，而60221F+1刚好就等于602220,因此该循环异或操作的结果就是最终的flag<br><img src="/image-5.png" alt="alt text"></p>
+<p>我们先追踪v10，发现v10由用户的输入进行异或操作得来，因此关键是要找到正确的用户输入<br><img src="/image-6.png" alt="alt text"></p>
+<p>继续阅读代码发现有一个创建线程的操作，总共创建了6个线程，而每个线程都执行了一个函数start_routine()而参数则是0~5<br><img src="/image-7.png" alt="alt text"><br>点进该函数进行分析，此时发现该函数对关键数组unk_602220进行赋值操作，因此这是一个关键函数，我们继续分析<br><img src="/image-8.png" alt="alt text"></p>
+<p>点进sub_400E10()函数进行分析，发现这是一个MD5编码函数，将用户输入的其中四个字节进行编码，然后存入v8<br><img src="/image-9.png" alt="alt text"></p>
+<p>然后用v8和已知的数组qword_602120的对应部分进行比较，若相同则将用户的输入中的这四个字节存入数组unk_602220当中，因此我们可以通过一个MD5在线解密网站获得用户输入的各个部分<a target="_blank" rel="noopener" href="https://www.somd5.com/%EF%BC%9A">https://www.somd5.com/：</a><br>将其逐个拼接就是用户的输入，然而并不一定是最终的unk_602220数组，因为该线程函数前面有一个usleep函数，作用是挂起当前线程一段时间，然后再锁住线程对数据进行写操作，因此6个线程相互竞争，我们无法确定线程写入的顺序，也就无法确定unk_602220数组最终的取值,也就是最终的flag</p>
+<p>因此此时的想法是将所有的这六个部分的排列组合都列举出来并执行相应的程序流程，最后再看能否得出最终的flag，</p>
+<p>此时的整个解题脚本的流程为：</p>
+<p>按上图MD5解密流程拼接各个解密出来的字符串即为用户的输入→将用户的输入执行第一层变换得到v10→枚举出全部的用户的该输入的六个部分的排列组合→将每一种排列组合与v10和已知数组进行异或→将不符合条件的情况去除(ASCII码大于122)→得到所有可能的flag</p>
+<p>完整解题脚本如下：</p>
+<p>python<br>import itertools<br>input1 &#x3D; ‘juhuhfenlapsiuerhjifdunu’</p>
+<p>list1 &#x3D; [0xFE, 0xE9, 0xF4, 0xE2, 0xF1, 0xFA, 0xF4, 0xE4, 0xF0, 0xE7,<br>  0xE4, 0xE5, 0xE3, 0xF2, 0xF5, 0xEF, 0xE8, 0xFF, 0xF6, 0xF4,<br>  0xFD, 0xB4, 0xA5, 0xB2]</p>
+<p>v10 &#x3D; 0<br>for i in range(len(input1)):<br>    v11 &#x3D; ord(input1[i])+i<br>    v10 ^&#x3D; v11</p>
+<h1 id="遍历用户输入的各部分的全部排列组合"><a href="#遍历用户输入的各部分的全部排列组合" class="headerlink" title="遍历用户输入的各部分的全部排列组合"></a>遍历用户输入的各部分的全部排列组合</h1><p>input1_part &#x3D; [‘juhu’, ‘hfen’, ‘laps’, ‘iuer’, ‘hjif’, ‘dunu’]</p>
+<p>permutations &#x3D; list(itertools.permutations(input1_part, 6))</p>
+<p>for perm in permutations:<br>    sample &#x3D; ‘’.join(perm)<br>    flag &#x3D; ‘’<br>    for i in range(len(sample)):<br>        flag_temp &#x3D; (v10 ^ list1[i] ^ ord(sample[i]))<br>        if flag_temp&gt;122:<br>            flag &#x3D; ‘’<br>            break<br>        else:<br>            flag+&#x3D;chr(flag_temp)<br>        if i &#x3D;&#x3D; len(sample)-1:<br>            print(flag)<br>            得一堆结果，在里面找到类似flag的结果</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://example.com/2026/02/27/first/" data-id="cuidbgqzI3F79vtXjvqVXO53h" data-title="" class="article-share-link"><span class="fa fa-share">Share</span></a>
+      
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+
+  
+    <article id="post-easy_go" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2026/02/27/easy_go/" class="article-date">
+  <time class="dt-published" datetime="2026-02-26T20:50:30.416Z" itemprop="datePublished">2026-02-27</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <p>title: 学习<br>date: 2026-2-26</p>
+<p>工具<br>ida逆向去符号表脚本+gdb</p>
+<p>思路展开<br>ida没符号表（符号表：平常打开ida都有函数名称指示，那个是main函数，那个是打印函数，本题打开发现没有这些指示，所有函数都是sub开头的通用表示，所以用脚本还原这些函数名）<br>IDA 7.0 如何使用 IDAGolangHelper插件<br>配置好后，执行脚本还原函数名称，找到main函数。<br><img src="/image-1.png" alt="alt text"><br>有个红色区域，猜测软件保护技术，所以采用动调，ida动调失败（有ida反调试，但ida改不了跳转，无奈放弃），所以采用gdb调试，在0x495318下断点调试，提示输入时，随便输入，flag就出来了。<br><img src="/image-2.png" alt="alt text"><br>flag{92094daf-33c9-431e-a85a-8bfbd5df98ad}<br>————————————————</p>
+<p>原文链接：<a target="_blank" rel="noopener" href="https://blog.csdn.net/weixin_45055269/article/details/106181087">https://blog.csdn.net/weixin_45055269/article/details/106181087</a></p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://example.com/2026/02/27/easy_go/" data-id="cuidkYNYzBXziemMNDT1ihEp6" data-title="" class="article-share-link"><span class="fa fa-share">Share</span></a>
+      
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+
+  
+    <article id="post-梅津美治郎" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2026/02/27/%E6%A2%85%E6%B4%A5%E7%BE%8E%E6%B2%BB%E9%83%8E/" class="article-date">
+  <time class="dt-published" datetime="2026-02-26T20:46:53.364Z" itemprop="datePublished">2026-02-27</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <p>title: 学习<br>date: 2026-2-11</p>
+<p>攻防世界Reverse高手进阶区的3分题<br>本篇是梅津美治郎的writeup</p>
+<p>攻防世界的题目分数是动态的<br>就仅以做题时的分数为准了</p>
+<p>解题过程<br>查壳显示无壳</p>
+<p>扔进IDA</p>
+<p>int __cdecl main(int argc, const char **argv, const char **envp)<br>{<br>  const CHAR *v3; &#x2F;&#x2F; ebx<br>  HMODULE v4; &#x2F;&#x2F; eax<br>  void (__stdcall *v5)(HMODULE, LPCSTR); &#x2F;&#x2F; eax<br>  char Str1[20]; &#x2F;&#x2F; [esp+1h] [ebp-157h] BYREF<br>  char Str2[11]; &#x2F;&#x2F; [esp+15h] [ebp-143h] BYREF<br>  int v9; &#x2F;&#x2F; [esp+20h] [ebp-138h] BYREF<br>  int v10[6]; &#x2F;&#x2F; [esp+26h] [ebp-132h] BYREF<br>  __int16 v11; &#x2F;&#x2F; [esp+3Eh] [ebp-11Ah]<br>  int v12[7]; &#x2F;&#x2F; [esp+40h] [ebp-118h] BYREF<br>  int v13[4]; &#x2F;&#x2F; [esp+5Ch] [ebp-FCh] BYREF<br>  int v14[2]; &#x2F;&#x2F; [esp+6Ch] [ebp-ECh] BYREF<br>  char v15; &#x2F;&#x2F; [esp+74h] [ebp-E4h]<br>  int v16[8]; &#x2F;&#x2F; [esp+75h] [ebp-E3h] BYREF<br>  __int16 v17; &#x2F;&#x2F; [esp+95h] [ebp-C3h]<br>  int v18[8]; &#x2F;&#x2F; [esp+97h] [ebp-C1h] BYREF<br>  char v19; &#x2F;&#x2F; [esp+B7h] [ebp-A1h]<br>  int v20; &#x2F;&#x2F; [esp+B8h] [ebp-A0h] BYREF<br>  int v21; &#x2F;&#x2F; [esp+BEh] [ebp-9Ah]<br>  int v22; &#x2F;&#x2F; [esp+C2h] [ebp-96h]<br>  int v23; &#x2F;&#x2F; [esp+C6h] [ebp-92h]<br>  int v24; &#x2F;&#x2F; [esp+CAh] [ebp-8Eh]<br>  int v25; &#x2F;&#x2F; [esp+CEh] [ebp-8Ah]<br>  int v26; &#x2F;&#x2F; [esp+D2h] [ebp-86h]<br>  int v27; &#x2F;&#x2F; [esp+D6h] [ebp-82h]<br>  int v28; &#x2F;&#x2F; [esp+DAh] [ebp-7Eh]<br>  char v29; &#x2F;&#x2F; [esp+DEh] [ebp-7Ah]<br>  int v30; &#x2F;&#x2F; [esp+DFh] [ebp-79h]<br>  int v31; &#x2F;&#x2F; [esp+E3h] [ebp-75h]<br>  int v32; &#x2F;&#x2F; [esp+E7h] [ebp-71h]<br>  int v33; &#x2F;&#x2F; [esp+EBh] [ebp-6Dh]<br>  int v34; &#x2F;&#x2F; [esp+EFh] [ebp-69h]<br>  int v35; &#x2F;&#x2F; [esp+F3h] [ebp-65h]<br>  int v36; &#x2F;&#x2F; [esp+F7h] [ebp-61h]<br>  int v37; &#x2F;&#x2F; [esp+FBh] [ebp-5Dh]<br>  __int16 v38; &#x2F;&#x2F; [esp+FFh] [ebp-59h]<br>  int v39; &#x2F;&#x2F; [esp+101h] [ebp-57h]<br>  int v40; &#x2F;&#x2F; [esp+105h] [ebp-53h]<br>  char v41; &#x2F;&#x2F; [esp+109h] [ebp-4Fh]<br>  int v42; &#x2F;&#x2F; [esp+10Ah] [ebp-4Eh]<br>  int v43; &#x2F;&#x2F; [esp+10Eh] [ebp-4Ah]<br>  int v44; &#x2F;&#x2F; [esp+112h] [ebp-46h]<br>  int v45; &#x2F;&#x2F; [esp+116h] [ebp-42h]<br>  int v46; &#x2F;&#x2F; [esp+11Ah] [ebp-3Eh]<br>  int v47; &#x2F;&#x2F; [esp+11Eh] [ebp-3Ah]<br>  int v48; &#x2F;&#x2F; [esp+122h] [ebp-36h]<br>  int v49; &#x2F;&#x2F; [esp+126h] [ebp-32h]<br>  int v50; &#x2F;&#x2F; [esp+12Ah] [ebp-2Eh]<br>  int v51; &#x2F;&#x2F; [esp+12Eh] [ebp-2Ah]<br>  int v52; &#x2F;&#x2F; [esp+132h] [ebp-26h]<br>  int v53; &#x2F;&#x2F; [esp+136h] [ebp-22h]<br>  int v54; &#x2F;&#x2F; [esp+13Ah] [ebp-1Eh]<br>  int v55; &#x2F;&#x2F; [esp+13Eh] [ebp-1Ah]<br>  int v56; &#x2F;&#x2F; [esp+142h] [ebp-16h]<br>  int v57; &#x2F;&#x2F; [esp+146h] [ebp-12h]<br>  int v58; &#x2F;&#x2F; [esp+14Ah] [ebp-Eh]<br>  __int16 v59; &#x2F;&#x2F; [esp+14Eh] [ebp-Ah]<br>  int *v60; &#x2F;&#x2F; [esp+150h] [ebp-8h]</p>
+<p>  v60 &#x3D; &argc;<br>  sub_402940();<br>  puts(<br>    “            .     \n”<br>    “           <em>|</em>    ROBOTIC AUTHENTICATION SYSTEM\n”<br>    “    &#x2F;\&#x2F;\  (. .)  &#x2F;\n”<br>    “    <code>||&#39;   |#|  \n&quot;     &quot;     ||__.-\&quot;-\&quot;-.___   \n&quot;     &quot;     </code>—| . . |–.\  \n”<br>    “         | : : |  ,||,\n”<br>    “         &#96;..-..’  \&#x2F;\&#x2F;\n”<br>    “          || ||   \n”<br>    “          || ||    \n”<br>    “         |<strong>|</strong>|  \n”);<br>  v20 &#x3D; 1337;<br>  v21 &#x3D; 1617194321;<br>  v22 &#x3D; 1679910002;<br>  v23 &#x3D; 1935963503;<br>  v24 &#x3D; 1684632865;<br>  v25 &#x3D; 1936221985;<br>  v26 &#x3D; 1361147250;<br>  v27 &#x3D; 1987211872;<br>  v28 &#x3D; 996504430;<br>  v29 &#x3D; 1;<br>  v18[0] &#x3D; 1617194321;<br>  v18[1] &#x3D; 1679910002;<br>  v18[2] &#x3D; 1935963503;<br>  v18[3] &#x3D; 1684632865;<br>  v18[4] &#x3D; 1936221985;<br>  v18[5] &#x3D; 1361147250;<br>  v18[6] &#x3D; 1987211872;<br>  v18[7] &#x3D; 996504430;<br>  v19 &#x3D; 1;<br>  v30 &#x3D; 1617194321;<br>  v31 &#x3D; 1679910002;<br>  v32 &#x3D; 1935963503;<br>  v33 &#x3D; 1684632865;<br>  v34 &#x3D; 1650749985;<br>  v35 &#x3D; 560295790;<br>  v36 &#x3D; 1920098385;<br>  v37 &#x3D; 1702063734;<br>  v38 &#x3D; 315;<br>  v16[0] &#x3D; 1617194321;<br>  v16[1] &#x3D; 1679910002;<br>  v16[2] &#x3D; 1935963503;<br>  v16[3] &#x3D; 1684632865;<br>  v16[4] &#x3D; 1650749985;<br>  v16[5] &#x3D; 560295790;<br>  v16[6] &#x3D; 1920098385;<br>  v16[7] &#x3D; 1702063734;<br>  v17 &#x3D; 315;<br>  v39 &#x3D; 1869557876;<br>  v40 &#x3D; 1718432615;<br>  v41 &#x3D; 3;<br>  v14[0] &#x3D; 1869557876;<br>  v14[1] &#x3D; 1718432615;<br>  v15 &#x3D; 3;<br>  v42 &#x3D; 1869833322;<br>  v43 &#x3D; 858942820;<br>  v44 &#x3D; 1835885871;<br>  v45 &#x3D; 20906241;<br>  v13[0] &#x3D; 1869833322;<br>  v13[1] &#x3D; 858942820;<br>  v13[2] &#x3D; 1835885871;<br>  v13[3] &#x3D; 20906241;<br>  v46 &#x3D; 1466262848;<br>  v47 &#x3D; 1853186660;<br>  v48 &#x3D; 1147495539;<br>  v49 &#x3D; 1902404217;<br>  v50 &#x3D; 1869506677;<br>  v51 &#x3D; 1701797961;<br>  v52 &#x3D; 24339565;<br>  v12[0] &#x3D; 1466262848;<br>  v12[1] &#x3D; 1853186660;<br>  v12[2] &#x3D; 1147495539;<br>  v12[3] &#x3D; 1902404217;<br>  v12[4] &#x3D; 1869506677;<br>  v12[5] &#x3D; 1701797961;<br>  v12[6] &#x3D; 24339565;<br>  v53 &#x3D; 561278552;<br>  v54 &#x3D; 795830390;<br>  v55 &#x3D; 1869496865;<br>  v56 &#x3D; 1969255270;<br>  v57 &#x3D; 1969253748;<br>  v58 &#x3D; 1919905384;<br>  v59 &#x3D; 288;<br>  v10[0] &#x3D; 561278552;<br>  v10[1] &#x3D; 795830390;<br>  v10[2] &#x3D; 1869496865;<br>  v10[3] &#x3D; 1969255270;<br>  v10[4] &#x3D; 1969253748;<br>  v10[5] &#x3D; 1919905384;<br>  v11 &#x3D; 288;<br>  v9 &#x3D; 1337;<br>  strcpy(Str2, “r0b0RUlez!”);<br>  dword_40AD94 &#x3D; (int)&v9;<br>  dword_40ADA0 &#x3D; (int)&v20;<br>  dword_40AD8C &#x3D; (char *)v18;<br>  dword_40AD90 &#x3D; (char *)v16;<br>  dword_40AD98 &#x3D; (int)v14;<br>  lpProcName &#x3D; (LPCSTR)v12;<br>  lpModuleName &#x3D; (LPCSTR)v13;<br>  Buffer &#x3D; (char *)v10;<br>  sub_401500(0);<br>  v3 &#x3D; lpProcName;<br>  v4 &#x3D; GetModuleHandleA(lpModuleName);<br>  v5 &#x3D; (void (__stdcall *)(HMODULE, LPCSTR))GetProcAddress(v4, v3);<br>  v5((HMODULE)1, (LPCSTR)sub_40157F);<br>  puts(dword_40AD8C);<br>  scanf(“%20s”, Str1);<br>  if ( !strcmp(Str1, Str2) )<br>  {<br>    puts(“You passed level1!”);<br>    sub_4015EA(0);<br>  }<br>  return 0;<br>}</p>
+<p>c</p>
+<p>1<br>可以看到</p>
+<p>一个简单的字符串比较，r0b0RUlez!应该是flag一部分</p>
+<p>然后，跟踪sub_4015EA：</p>
+<p>先是一个9次递归打印dword_40AD90数组</p>
+<p>再是一个__debugbreak函数，这会抛出int3断点异常，这里贴下查到的分析</p>
+<p>__debugbreak函数相当于一个int 3指令，引发一个中断，把执行权移交给调试器；如果没有调试器，那就移交给其他异常处理回调函数；如果都没有，那么程序就自己断下来。这里就是为了触发回调函数，如果没有调试器附加，那么debugbreak产生的异常会被AddVectoredExceptionHandler添加的回调函数捕获来处理</p>
+<p>回过头看main函数<br>有长串的变量和数字，其中v12和v13构成模块名和变量名</p>
+<p>而sub_401500函数通过递归，对字符串进行了操作，所以上面直接分析字符串分析不出来是什么</p>
+<p>动态调试出来v12和v13分别是kernel32.dll和AddVectoredExceptionHandler<br>那v5就是：捕抓异常然后给第一个处理函数sub_40157F处理<br>这就和上面的__debugbreak函数连上了</p>
+<p>跟踪sub_40157F函数</p>
+<p>发现是个异或2<br>但是这个字符串看不了</p>
+<p>扔进OD动态调试，发现int3直接patch了。。<br>就调用exit(0)，跑到了0x7开头的地址，飞了。。</p>
+<p>用IDA调试，下断点</p>
+<p>随意输入</p>
+<p>然后就看到</p>
+<p>这就可以写脚本了</p>
+<p>key&#x3D;”u1nnf2lg”<br>flag2&#x3D;””<br>for i in key1:<br>	flag2+&#x3D;chr(ord(i)^2)<br>print(flag2)<br>一键获取完整项目代码<br>python<br>1<br>2<br>3<br>4<br>5<br>得到w3lld0ne<br>————————————————<br>版权声明：本文为CSDN博主「思源湖的鱼」的原创文章，遵循CC 4.0 BY-SA版权协议，转载请附上原文出处链接及本声明。<br>原文链接：<a target="_blank" rel="noopener" href="https://blog.csdn.net/weixin_44604541/article/details/125229496">https://blog.csdn.net/weixin_44604541/article/details/125229496</a></p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://example.com/2026/02/27/%E6%A2%85%E6%B4%A5%E7%BE%8E%E6%B2%BB%E9%83%8E/" data-id="cuidQH026twcopgnTXGTwsKGq" data-title="" class="article-share-link"><span class="fa fa-share">Share</span></a>
+      
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+
+  
+    <article id="post-金盾杯密码题复现" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2026/02/27/%E9%87%91%E7%9B%BE%E6%9D%AF%E5%AF%86%E7%A0%81%E9%A2%98%E5%A4%8D%E7%8E%B0/" class="article-date">
+  <time class="dt-published" datetime="2026-02-26T20:38:12.639Z" itemprop="datePublished">2026-02-27</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <p>title: 密码题<br>date: 2026-2-7</p>
+<p>金盾杯很简单的一道密码题，写了三个脚本<br>Request</p>
+<p>from Crypto.Util.number import long_to_bytes<br>import math</p>
+<h1 id="已知参数"><a href="#已知参数" class="headerlink" title="已知参数"></a>已知参数</h1><p>n &#x3D; 93977446509601491411273109183700477792476081212252100588514513996369916050240513858257713585313335366590846240370949831289684059273587772970292476296340120801189466605373324380976699533407970974215875662294283755613133719192114163547130089995306718768119144501566575807133141973499886356493323821201111393199<br>e &#x3D; 65537<br>dp &#x3D; 4646721143214293575763413674967142339122604220191663048739174575126624610789286103728040064106260338484738571999187838033377907298506299277252376843468857<br>c &#x3D; 39842044108169653665655273759299059319749157454557086299529162182474598233474908300467494642550719706800866015430966154461050042032159169236220832726422011654867871818265524075008160875598938671421298968459869843510325230871429349578969045129760472874539862070944657591218420952191065002303403538259250208430</p>
+<p>print(“开始解密过程…”)<br>print(f”n 的位数: {n.bit_length()}”)<br>print(f”dp 的位数: {dp.bit_length()}”)</p>
+<h1 id="方法：利用-dp-攻击"><a href="#方法：利用-dp-攻击" class="headerlink" title="方法：利用 dp 攻击"></a>方法：利用 dp 攻击</h1><h1 id="dp-d-mod-p-1"><a href="#dp-d-mod-p-1" class="headerlink" title="dp &#x3D; d mod (p-1)"></a>dp &#x3D; d mod (p-1)</h1><h1 id="因为-d-e-1-mod-phi-所以-dp-d-k-p-1-对于某个整数-k"><a href="#因为-d-e-1-mod-phi-所以-dp-d-k-p-1-对于某个整数-k" class="headerlink" title="因为 d &#x3D; e^-1 mod phi, 所以 dp &#x3D; d - k*(p-1) 对于某个整数 k"></a>因为 d &#x3D; e^-1 mod phi, 所以 dp &#x3D; d - k*(p-1) 对于某个整数 k</h1><h1 id="我们可以尝试不同的-k-值来找到-p"><a href="#我们可以尝试不同的-k-值来找到-p" class="headerlink" title="我们可以尝试不同的 k 值来找到 p"></a>我们可以尝试不同的 k 值来找到 p</h1><p>def attack_rsa_dp(n, e, dp):<br>    “””<br>    使用已知的 dp 值攻击 RSA<br>    dp &#x3D; d mod (p-1)<br>    “””<br>    # 尝试不同的 k 值<br>    for k in range(1, e):  # k 应该在 1 到 e-1 之间<br>        # dp &#x3D; d - k*(p-1)<br>        # d &#x3D; dp + k*(p-1)</p>
+<pre><code>    # 因为 d*e ≡ 1 (mod phi)
+    # 所以 (dp + k*(p-1))*e ≡ 1 (mod (p-1)*(q-1))
+    
+    # 这个同余式可以简化为寻找 p 的方程
+    # 我们可以尝试另一种方法
+    
+    # 从 dp = d mod (p-1) 出发
+    # 我们有 d = dp + k*(p-1) 对于某个 k
+    # 代入 d*e ≡ 1 (mod phi)
+    
+    # 尝试计算可能的 p
+    try:
+        # 使用 Wiener&#39;s attack 的变种
+        # 这里使用一个更简单的方法
+        
+        # 我们知道 dp = d mod (p-1)
+        # 所以 d = dp + k*(p-1) 对于某个整数 k
+        # 因为 d = e^-1 mod phi，所以 d*e = 1 + m*phi 对于某个整数 m
+        
+        # 代入得: (dp + k*(p-1))*e = 1 + m*(p-1)*(q-1)
+        # 展开: dp*e + k*e*(p-1) = 1 + m*(p-1)*(q-1)
+        # 重排: dp*e - 1 = (p-1)*(m*(q-1) - k*e)
+        
+        # 所以 (p-1) 是 (dp*e - 1) 的一个因子
+        temp = dp * e - 1
+        
+        # 尝试找到 (p-1) 的候选值
+        if temp % k == 0:
+            possible_p_minus_1 = temp // k
+            possible_p = possible_p_minus_1 + 1
+            
+            # 检查这个 p 是否能整除 n
+            if n % possible_p == 0:
+                p = possible_p
+                q = n // p
+                
+                # 验证结果
+                if p * q == n and p &gt; 1 and q &gt; 1:
+                    print(f&quot;找到因子!&quot;)
+                    print(f&quot;p = {p}&quot;)
+                    print(f&quot;q = {q}&quot;)
+                    return p, q
+    except:
+        continue
+
+return None, None
+</code></pre>
+<p>print(“正在尝试恢复 p 和 q…”)<br>p, q &#x3D; attack_rsa_dp(n, e, dp)</p>
+<p>if p and q:<br>    print(f”\n成功分解 n!”)<br>else:<br>    print(“\n尝试另一种方法…”)<br>    Request</p>
+<h1 id="现在我们有了-p-和-q，可以解密了"><a href="#现在我们有了-p-和-q，可以解密了" class="headerlink" title="现在我们有了 p 和 q，可以解密了"></a>现在我们有了 p 和 q，可以解密了</h1><p>phi &#x3D; (p - 1) * (q - 1)<br>d &#x3D; pow(e, -1, phi)</p>
+<h1 id="解密"><a href="#解密" class="headerlink" title="解密"></a>解密</h1><p>m &#x3D; pow(c, d, n)<br>flag &#x3D; long_to_bytes(m)</p>
+<p>print(f”\n解密结果:”)<br>print(f”原始消息: {m}”)<br>print(f”Flag: {flag.decode()}”)</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://example.com/2026/02/27/%E9%87%91%E7%9B%BE%E6%9D%AF%E5%AF%86%E7%A0%81%E9%A2%98%E5%A4%8D%E7%8E%B0/" data-id="cuid4gp3CwIuwAtBHVseBGQsV" data-title="" class="article-share-link"><span class="fa fa-share">Share</span></a>
+      
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+
+  
+    <article id="post-reverse_box" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2026/02/27/reverse_box/" class="article-date">
+  <time class="dt-published" datetime="2026-02-26T20:29:46.612Z" itemprop="datePublished">2026-02-27</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <p>title: md5加密<br>date: 2026-2-11<br>攻防世界reverse_box<br>学习心得<br>学习到使用 gdb脚本 的调试，利用 脚本 自动调试程序并进行爆破。<br>与平常写的题目不同main函数，也可以接受 参数，例如一下源程序。<br>#include &lt;stdio.h&gt;</p>
+<p>#第一个参数是执行文件是命令行传入参数的个数，第二个是个参数再内存中的地址<br>int main(int argc, char *argv[])<br>{<br>    printf(“hello:\n”);<br>    printf(“%d\n”, argc);#输出参数的个数<br>    printf(“%s\n”, argv[0]);#输出参数的内容<br>    printf(“%s”, argv[1]);<br>    return 0;<br>}<br>一键获取完整项目代码<br>c</p>
+<p>输出：</p>
+<p>题解<br>清楚这两点手进入题目：ida打开，进入main函数，这里可以看到main函数接受了两个参数，和我们前面的提到的相同，检查的传入的参数个数是否大于二。</p>
+<p>进入box函数生成了一个长度为256的v4盒子，然后用输入的flag对盒子进行查表输出其盒子中对应偏移的十六进制。这里原来是题目要求最终输出为下面这段数据：<br>95eeaf95ef94234999582f722f492f72b19a7aaf72e6e776b57aee722fe77ab5ad9aaeb156729676ae7a236d99b1df4a<br>这里思路就是得到v4这盒子，然后用应该输出的数据对盒子进行逆查找，用值查其再盒子中对应的下标，根据题目要求的flag格式 TWCTF{}, 即 95 ，在盒子中对应的下标即为 T 的ASCII码 84 。</p>
+<p>进入bos分析：利用随机生成的数(非0)的 低8位 作为种子来生成整个盒子。</p>
+<p>进入汇编来查看随机数的生成：and之后，取出eax(本身是32位)，只取用eax的低8位作为种子密钥来生成box，因此可以在调试的时候将eax的值设置为 0~255 继续爆破，然后根据偏移为 84 处的值是否为 95 来判定爆破的结果是否符合要求，或者，在输入部分正确的flag WTCTF 后在地址 0x080486C3观察输入的第一个值是否为 95。</p>
+<p>gdb调试脚本如下：</p>
+<p>set $i&#x3D;0<br>set $total&#x3D;256</p>
+<p>while($i&lt;$total)</p>
+<p>  b *0x80485b4<br>  b *0x8048707</p>
+<p>  run TWCTF</p>
+<p>  set $i&#x3D;$i+1<br>  set <em>(char</em>)($ebp-0xc)&#x3D;$i<br>  continue</p>
+<p>  if ($eax&#x3D;&#x3D;0x95)<br>    print $i<br>    x&#x2F;256xb $esp+0x1c<br>    set $i&#x3D;256</p>
+<p>  end<br>  stop<br>end<br>end</p>
+<p>一键获取完整项目代码<br>python</p>
+<p>脚本说明：</p>
+<p>#设置爆破的范围0~255<br>set $i&#x3D;0<br>set $total&#x3D;256</p>
+<p>while($i&lt;$total)<br>  #每次进入都需要打上断点，一次调试结束后gdb会清除掉断点<br>  #在地址0x080485B4处打上断点，后续为eax传递爆破的数字<br>  b *0x80485b4<br>  #在地址0x080485B4处打上断点，后续检查eax的值是否爆破正确<br>  b *0x8048707</p>
+<p>  #启动程序，并传入参数TWCTF<br>  run TWCTF</p>
+<p>  #计数器加一<br>  set $i&#x3D;$i+1</p>
+<p>  #将栈上的数据覆盖，用爆破的种子即覆盖原来随机生成的种子<br>  #这里也可以在0x080485B1处打断点，直接为eax赋值为i，是相同的效果<br>  set <em>(char</em>)($ebp-0xc)&#x3D;$i</p>
+<p>  #继续执行程序<br>  continue</p>
+<p>  #在0x8048707处检查eax的值是否正确，正确则直接输出盒子，不正确则继续执行脚本，调试程序<br>  if ($eax&#x3D;&#x3D;0x95)<br>    #打印爆破出来的种子<br>    print $i<br>    #答应盒子，共256个字节，地址从esp+0x1c处开始<br>    x&#x2F;256xb $esp+0x1c<br>    #退出if语句后达到循环条件，直接退出<br>    set $i&#x3D;256<br>    #if语句结束<br>    end<br>  #结束一次调试<br>  stop<br>end<br>end</p>
+<p>一键获取完整项目代码<br>python</p>
+<p>脚本执行：将上面代码放入source.sh文件，进入调试后直接使用命令 source source.sh 即可执行脚本自动调试程序。</p>
+<p>拿到盒子后输出flag：</p>
+<p>table&#x3D;[<br> 0xd6,   0xc9 ,   0xc2,    0xce,    0x47,    0xde,    0xda,    0x70,<br> 0x85,   0xb4 ,   0xd2,    0x9e,    0x4b,    0x62,    0x1e,    0xc3,<br> 0x7f,   0x37 ,   0x7c,    0xc8,    0x4f,    0xec,    0xf2,    0x45,<br> 0x18,   0x61 ,   0x17,    0x1a,    0x29,    0x11,    0xc7,    0x75,<br> 0x02,   0x48 ,   0x26,    0x93,    0x83,    0x8a,    0x42,    0x79,<br> 0x81,   0x10 ,   0x50,    0x44,    0xc4,    0x6d,    0x84,    0xa0,<br> 0xb1,   0x72 ,   0x96,    0x76,    0xad,    0x23,    0xb0,    0x2f,<br> 0xb2,   0xa7 ,   0x35,    0x57,    0x5e,    0x92,    0x07,    0xc0,<br> 0xbc,   0x36 ,   0x99,    0xaf,    0xae,    0xdb,    0xef,    0x15,<br> 0xe7,   0x8e ,   0x63,    0x06,    0x9c,    0x56,    0x9a,    0x31,<br> 0xe6,   0x64 ,   0xb5,    0x58,    0x95,    0x49,    0x04,    0xee,<br> 0xdf,   0x7e ,   0x0b,    0x8c,    0xff,    0xf9,    0xed,    0x7a,<br> 0x65,   0x5a ,   0x1f,    0x4e,    0xf6,    0xf8,    0x86,    0x30,<br> 0xf0,   0x4c ,   0xb7,    0xca,    0xe5,    0x89,    0x2a,    0x1d,<br> 0xe4,   0x16 ,   0xf5,    0x3a,    0x27,    0x28,    0x8d,    0x40,<br> 0x09,   0x03 ,   0x6f,    0x94,    0xa5,    0x4a,    0x46,    0x67,<br> 0x78,   0xb9 ,   0xa6,    0x59,    0xea,    0x22,    0xf1,    0xa2,<br> 0x71,   0x12 ,   0xcb,    0x88,    0xd1,    0xe8,    0xac,    0xc6,<br> 0xd5,   0x34 ,   0xfa,    0x69,    0x97,    0x9f,    0x25,    0x3d,<br> 0xf3,   0x5b ,   0x0d,    0xa1,    0x6b,    0xeb,    0xbe,    0x6e,<br> 0x55,   0x87 ,   0x8f,    0xbf,    0xfc,    0xb3,    0x91,    0xe9,<br> 0x77,   0x66 ,   0x19,    0xd7,    0x24,    0x20,    0x51,    0xcc,<br> 0x52,   0x7d ,   0x82,    0xd8,    0x38,    0x60,    0xfb,    0x1c,<br> 0xd9,   0xe3 ,   0x41,    0x5f,    0xd0,    0xcf,    0x1b,    0xbd,<br> 0x0f,   0xcd ,   0x90,    0x9b,    0xa9,    0x13,    0x01,    0x73,<br> 0x5d,   0x68 ,   0xc1,    0xaa,    0xfe,    0x08,    0x3e,    0x3f,<br> 0xc5,   0x8b ,   0x00,    0xd3,    0xfd,    0xb6,    0x43,    0xbb,<br> 0xd4,   0x80 ,   0xe2,    0x0c,    0x33,    0x74,    0xa8,    0x2b,<br> 0x54,   0x4d ,   0x2d,    0xa4,    0xdc,    0x6c,    0x3b,    0x21,<br> 0x2e,   0xab ,   0x32,    0x5c,    0x7b,    0xe0,    0x9d,    0x6a,<br> 0x39,   0x14 ,   0x3c,    0xb8,    0x0a,    0x53,    0xf7,    0xdd,<br> 0xf4,   0x2c ,   0x98,    0xba,    0x05,    0xe1,    0x0e,    0xa3]<br>res&#x3D;’95eeaf95ef94234999582f722f492f72b19a7aaf72e6e776b57aee722fe77ab5ad9aaeb156729676ae7a236d99b1df4a’<br>for i in range(0,len(res),2):<br>    tmp&#x3D;int(res[i:i+2],16)<br>    print(chr(table.index(tmp)),end&#x3D;””)<br>#TWCTF{5UBS717U710N_C1PH3R_W17H_R4ND0M123D_5-B0X}<br>一键获取完整项目代码<br>python<br>最后，按理来说，输入相同的flag，其输出的结果应该与上面相对应，但是实际上却是下面这种情况，咱也不知道是啥问题，可能年久失修，box也不正确了吧：</p>
+<p>————————————————<br>版权声明：本文为CSDN博主「波克比QWQ」的原创文章，遵循CC 4.0 BY-SA版权协议，转载请附上原文出处链接及本声明。<br>原文链接：<a target="_blank" rel="noopener" href="https://blog.csdn.net/yjh_fnu_ltn/article/details/138967062">https://blog.csdn.net/yjh_fnu_ltn/article/details/138967062</a></p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://example.com/2026/02/27/reverse_box/" data-id="cuidWC9GG05Y2OoSCRIX3_4qz" data-title="" class="article-share-link"><span class="fa fa-share">Share</span></a>
+      
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+
+  
+    <article id="post-easy_Maze" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2026/02/27/easy_Maze/" class="article-date">
+  <time class="dt-published" datetime="2026-02-26T20:25:37.941Z" itemprop="datePublished">2026-02-27</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <p>title: 迷宫问题<br>date: 2026-2-26</p>
+<p>攻防世界easy_Maze<br>maze类：1.内存中画出一张地图（地图变换） 2.明确起点和终点 3.（四个字符对应上下左右）flag就是走出的路径</p>
+<p>题目提示是maze类的，找上面三个关键点</p>
+<p>复制代码<br>  1 int __cdecl main(int argc, const char *<em>argv, const char *<em>envp)<br>  2 {<br>  3   __int64 v3; &#x2F;&#x2F; rax<br>  4   int v5[7]; &#x2F;&#x2F; [rsp+0h] [rbp-270h]<br>  5   int v6; &#x2F;&#x2F; [rsp+C0h] [rbp-1B0h]<br>  6   int v7[7]; &#x2F;&#x2F; [rsp+D0h] [rbp-1A0h]<br>  7   int v8; &#x2F;&#x2F; [rsp+190h] [rbp-E0h]<br>  8   int v9[7]; &#x2F;&#x2F; [rsp+1A0h] [rbp-D0h]<br>  9   int v10; &#x2F;&#x2F; [rsp+1BCh] [rbp-B4h]<br> 10   int v11; &#x2F;&#x2F; [rsp+1C0h] [rbp-B0h]<br> 11   int v12; &#x2F;&#x2F; [rsp+1C4h] [rbp-ACh]<br> 12   int v13; &#x2F;&#x2F; [rsp+1C8h] [rbp-A8h]<br> 13   int v14; &#x2F;&#x2F; [rsp+1CCh] [rbp-A4h]<br> 14   int v15; &#x2F;&#x2F; [rsp+1D0h] [rbp-A0h]<br> 15   int v16; &#x2F;&#x2F; [rsp+1D4h] [rbp-9Ch]<br> 16   int v17; &#x2F;&#x2F; [rsp+1D8h] [rbp-98h]<br> 17   int v18; &#x2F;&#x2F; [rsp+1DCh] [rbp-94h]<br> 18   int v19; &#x2F;&#x2F; [rsp+1E0h] [rbp-90h]<br> 19   int v20; &#x2F;&#x2F; [rsp+1E4h] [rbp-8Ch]<br> 20   int v21; &#x2F;&#x2F; [rsp+1E8h] [rbp-88h]<br> 21   int v22; &#x2F;&#x2F; [rsp+1ECh] [rbp-84h]<br> 22   int v23; &#x2F;&#x2F; [rsp+1F0h] [rbp-80h]<br> 23   int v24; &#x2F;&#x2F; [rsp+1F4h] [rbp-7Ch]<br> 24   int v25; &#x2F;&#x2F; [rsp+1F8h] [rbp-78h]<br> 25   int v26; &#x2F;&#x2F; [rsp+1FCh] [rbp-74h]<br> 26   int v27; &#x2F;&#x2F; [rsp+200h] [rbp-70h]<br> 27   int v28; &#x2F;&#x2F; [rsp+204h] [rbp-6Ch]<br> 28   int v29; &#x2F;&#x2F; [rsp+208h] [rbp-68h]<br> 29   int v30; &#x2F;&#x2F; [rsp+20Ch] [rbp-64h]<br> 30   int v31; &#x2F;&#x2F; [rsp+210h] [rbp-60h]<br> 31   int v32; &#x2F;&#x2F; [rsp+214h] [rbp-5Ch]<br> 32   int v33; &#x2F;&#x2F; [rsp+218h] [rbp-58h]<br> 33   int v34; &#x2F;&#x2F; [rsp+21Ch] [rbp-54h]<br> 34   int v35; &#x2F;&#x2F; [rsp+220h] [rbp-50h]<br> 35   int v36; &#x2F;&#x2F; [rsp+224h] [rbp-4Ch]<br> 36   int v37; &#x2F;&#x2F; [rsp+228h] [rbp-48h]<br> 37   int v38; &#x2F;&#x2F; [rsp+22Ch] [rbp-44h]<br> 38   int v39; &#x2F;&#x2F; [rsp+230h] [rbp-40h]<br> 39   int v40; &#x2F;&#x2F; [rsp+234h] [rbp-3Ch]<br> 40   int v41; &#x2F;&#x2F; [rsp+238h] [rbp-38h]<br> 41   int v42; &#x2F;&#x2F; [rsp+23Ch] [rbp-34h]<br> 42   int v43; &#x2F;&#x2F; [rsp+240h] [rbp-30h]<br> 43   int v44; &#x2F;&#x2F; [rsp+244h] [rbp-2Ch]<br> 44   int v45; &#x2F;&#x2F; [rsp+248h] [rbp-28h]<br> 45   int v46; &#x2F;&#x2F; [rsp+24Ch] [rbp-24h]<br> 46   int v47; &#x2F;&#x2F; [rsp+250h] [rbp-20h]<br> 47   int v48; &#x2F;&#x2F; [rsp+254h] [rbp-1Ch]<br> 48   int v49; &#x2F;&#x2F; [rsp+258h] [rbp-18h]<br> 49   int v50; &#x2F;&#x2F; [rsp+25Ch] [rbp-14h]<br> 50   int v51; &#x2F;&#x2F; [rsp+260h] [rbp-10h]<br> 51<br> 52   v9[0] &#x3D; 1;<br> 53   v9[1] &#x3D; 1;<br> 54   v9[2] &#x3D; -1;<br> 55   v9[3] &#x3D; 1;<br> 56   v9[4] &#x3D; -1;<br> 57   v9[5] &#x3D; 1;<br> 58   v9[6] &#x3D; -1;<br> 59   v10 &#x3D; 0;<br> 60   v11 &#x3D; 0;<br> 61   v12 &#x3D; 0;<br> 62   v13 &#x3D; 0;<br> 63   v14 &#x3D; 1;<br> 64   v15 &#x3D; -1;<br> 65   v16 &#x3D; 0;<br> 66   v17 &#x3D; 0;<br> 67   v18 &#x3D; 1;<br> 68   v19 &#x3D; 0;<br> 69   v20 &#x3D; 0;<br> 70   v21 &#x3D; 1;<br> 71   v22 &#x3D; 0;<br> 72   v23 &#x3D; -1;<br> 73   v24 &#x3D; -1;<br> 74   v25 &#x3D; 0;<br> 75   v26 &#x3D; 1;<br> 76   v27 &#x3D; 0;<br> 77   v28 &#x3D; 1;<br> 78   v29 &#x3D; -1;<br> 79   v30 &#x3D; 0;<br> 80   v31 &#x3D; -1;<br> 81   v32 &#x3D; 0;<br> 82   v33 &#x3D; 0;<br> 83   v34 &#x3D; 0;<br> 84   v35 &#x3D; 0;<br> 85   v36 &#x3D; 0;<br> 86   v37 &#x3D; 1;<br> 87   v38 &#x3D; -1;<br> 88   v39 &#x3D; -1;<br> 89   v40 &#x3D; 1;<br> 90   v41 &#x3D; -1;<br> 91   v42 &#x3D; 0;<br> 92   v43 &#x3D; -1;<br> 93   v44 &#x3D; 2;<br> 94   v45 &#x3D; 1;<br> 95   v46 &#x3D; -1;<br> 96   v47 &#x3D; 0;<br> 97   v48 &#x3D; 0;<br> 98   v49 &#x3D; -1;<br> 99   v50 &#x3D; 1;<br>100   v51 &#x3D; 0;<br>101   memset(v7, 0, 0xC0uLL);<br>102   v8 &#x3D; 0;<br>103   memset(v5, 0, 0xC0uLL);<br>104   v6 &#x3D; 0;<br>105   Step_0((int (</em>)[7])v9, 7, (int (*)[7])v7); #地图变换<br>106   Step_1((int (</em>)[7])v7, 7, (int (<em>)[7])v5); #地图变换<br>107   v3 &#x3D; std::operator&lt;&lt;&lt;std::char_traits<char>&gt;(&amp;_bss_start, “Please help me out!”);<br>108   std::ostream::operator&lt;&lt;(v3, &amp;std::endl&lt;char,std::char_traits<char>&gt;);<br>109   Step_2((int (</em>)[7])v5); #输入，验证<br>110   system(“pause”);<br>111   return 0;<br>112 }<br>复制代码<br>进入Step_2函数</p>
+<p>复制代码<br>__int64 __fastcall Step_2(int (*a1)[7])<br>{<br>  int v1; &#x2F;&#x2F; eax<br>  __int64 v2; &#x2F;&#x2F; rax<br>  __int64 v3; &#x2F;&#x2F; rax<br>  __int64 result; &#x2F;&#x2F; rax<br>  __int64 v5; &#x2F;&#x2F; rax<br>  char v6[35]; &#x2F;&#x2F; [rsp+10h] [rbp-30h]<br>  char v7; &#x2F;&#x2F; [rsp+33h] [rbp-Dh]<br>  int v8; &#x2F;&#x2F; [rsp+34h] [rbp-Ch]<br>  int v9; &#x2F;&#x2F; [rsp+38h] [rbp-8h]<br>  int v10; &#x2F;&#x2F; [rsp+3Ch] [rbp-4h]</p>
+<p>  v10 &#x3D; 0;<br>  v9 &#x3D; 0;<br>  v8 &#x3D; 0;   #初始位置[0][0]<br>  while ( v8 &lt;&#x3D; 29 &amp;&amp; (*a1)[7 * v10 + v9] &#x3D;&#x3D; 1 )  #最多30步，走1<br>  {<br>    std::operator&gt;&gt;&lt;char,std::char_traits<char>&gt;(&amp;std::cin, &amp;v7);<br>    v1 &#x3D; v8++;<br>    v6[v1] &#x3D; v7;<br>    if ( v7 &#x3D;&#x3D; ‘d’ ) #向右<br>    {<br>      ++v9;<br>    }<br>    else if ( v7 &gt; ‘d’ )<br>    {<br>      if ( v7 &#x3D;&#x3D; ‘s’ ) #向下<br>      {<br>        ++v10;<br>      }<br>      else<br>      {<br>        if ( v7 !&#x3D; ‘w’ ) #向上<br>          goto LABEL_14;<br>        –v10;<br>      }<br>    }<br>    else if ( v7 &#x3D;&#x3D; ‘a’ ) #向左<br>    {<br>      –v9;<br>    }<br>    else<br>    {<br>LABEL_14:<br>      v2 &#x3D; std::operator&lt;&lt;&lt;std::char_traits<char>&gt;(&amp;_bss_start, “include illegal words.”);<br>      std::ostream::operator&lt;&lt;(v2, &amp;std::endl&lt;char,std::char_traits<char>&gt;);<br>    }<br>  }<br>  if ( v10 !&#x3D; 6 || v9 !&#x3D; 6 ) #结束位置[6][6]<br>  {<br>    v5 &#x3D; std::operator&lt;&lt;&lt;std::char_traits<char>&gt;(&amp;_bss_start, “Oh no!,Please try again~~”);<br>    std::ostream::operator&lt;&lt;(v5, &amp;std::endl&lt;char,std::char_traits<char>&gt;);<br>    result &#x3D; 0LL;<br>  }<br>  else<br>  {<br>    v3 &#x3D; std::operator&lt;&lt;&lt;std::char_traits<char>&gt;(&amp;_bss_start, “Congratulations!”);<br>    std::ostream::operator&lt;&lt;(v3, &amp;std::endl&lt;char,std::char_traits<char>&gt;);<br>    output(v6, v8);<br>    result &#x3D; 1LL;<br>  }<br>  return result;<br>}<br>复制代码<br>综上：<br>1.地图两次变换（可通过动态调试找到）<br>2.起点[0][0]到[6][6]<br>3.wasd 对应上左下右</p>
+<p>动态调试地图（这里小坑，需要设置显示的格式（下图））（设置成4byte_Integer和Signed）</p>
+<p>动调dump出地图</p>
+<p>地图整出来，走法</p>
+<p>ssddwdwdddssaasasaaassddddwdds</p>
+<p>UNCTF{ssddwdwdddssaasasaaassddddwdds}</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://example.com/2026/02/27/easy_Maze/" data-id="cuidSYABjpwe9w5D1j71MZS1y" data-title="" class="article-share-link"><span class="fa fa-share">Share</span></a>
+      
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+
+  
+    <article id="post-re4-unvm-me" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2026/02/27/re4-unvm-me/" class="article-date">
+  <time class="dt-published" datetime="2026-02-26T19:49:41.344Z" itemprop="datePublished">2026-02-27</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <p>title: md5加密<br>date: 2026-2-11</p>
+<p>反编译为out.py文件</p>
+<p>得到代码，意思是将传入的字符串分五个一组，md5加密，作为16进制转10进制（int函数），然后依次与md5s数组进行比较</p>
+<p>附代码：</p>
+<p>复制代码<br> 1     # uncompyle6 version 3.4.0<br> 2<br> 3     # Python bytecode 2.7 (62211)<br> 4<br> 5     # Decompiled from: Python 2.7.9 (default, Mar  1 2015, 12:57:24)<br> 6<br> 7     # [GCC 4.9.2]<br> 8<br> 9     # Embedded file name: unvm_me.py<br>10<br>11     # Compiled at: 2016-12-21 05:44:01<br>12<br>13     import md5<br>14<br>15     md5s &#x3D; [<br>16<br>17     174282896860968005525213562254350376167L, 137092044126081477479435678296496849608L, 126300127609096051658061491018211963916L, 314989972419727999226545215739316729360L, 256525866025901597224592941642385934114L, 115141138810151571209618282728408211053L, 8705973470942652577929336993839061582L, 256697681645515528548061291580728800189L, 39818552652170274340851144295913091599L, 65313561977812018046200997898904313350L, 230909080238053318105407334248228870753L, 196125799557195268866757688147870815374L, 74874145132345503095307276614727915885L]<br>18<br>19     print ‘Can you turn me back to python ? …’<br>20<br>21     flag &#x3D; raw_input(‘well as you wish.. what is the flag: ‘)<br>22<br>23     if len(flag) &gt; 69:<br>24<br>25         print ‘nice try’<br>26<br>27         exit()<br>28<br>29     if len(flag) % 5 !&#x3D; 0:<br>30<br>31         print ‘nice try’<br>32<br>33         exit()<br>34<br>35     for i in range(0, len(flag), 5):<br>36<br>37         s &#x3D; flag[i:i + 5]<br>38<br>39         if int(‘0x’ + md5.new(s).hexdigest(), 16) !&#x3D; md5s[(i &#x2F; 5)]:<br>40<br>41             print ‘nice try’<br>42<br>43             exit()<br>44<br>45     print ‘Congratz now you have the flag’<br>复制代码<br>把md5s转换为16进制（hex函数）</p>
+<p>拿到md5解密网站解密，有一个没有解出来，发现是少了一位</p>
+<p>查看原来的10进制数据发现其他的都是39位，未解出的是37位。猜想原来的md5首位应该是0，进制转换自动省略首位0（但是猜这里应该是原作者自己去掉0的），添加0解出密文。幸好都解出来了，如果没有要写五位数字+英文的爆破，那…太惨了吧不知道要爆到什么时候。</p>
+<p>得到flag输入验证正确</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://example.com/2026/02/27/re4-unvm-me/" data-id="cuidNWTzgdUJLm4mSa9RDi50g" data-title="" class="article-share-link"><span class="fa fa-share">Share</span></a>
+      
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+
+  
+    <article id="post-迷宫问题" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2026/02/27/%E8%BF%B7%E5%AE%AB%E9%97%AE%E9%A2%98/" class="article-date">
+  <time class="dt-published" datetime="2026-02-26T18:52:15.853Z" itemprop="datePublished">2026-02-27</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <p>title: 迷宫问题<br>date: 2026-1-31</p>
+<p>题目为攻防世界的reverse_re3、<br>main函数分析<br>main函数十分的简单，说明关键代码都在函数里了</p>
+<p>​</p>
+<p>sub_940是需要关键分析的函数，每次循环都会带回返回值赋值给v4，等于1或者-1时都将使循环停止</p>
+<p>sub_11B4函数分析<br>双击跟进sub_11B4函数，这个函数也是十分简洁，第5行和第7行的__readfsqword(0x28u)经常会出现，看了其他大佬的wp说是用了反调试，但讲原理的目前还没搜到。。先记下来吧，等以后有缘自会理解的</p>
+<p>第6行则是对dword_202AB0变量赋值了0，现在还不太清楚这个作用，先留个心眼</p>
+<p>​</p>
+<p>sub_940函数分析<br>双击跟进sub_940函数，这个就是关键函数了，这里的变量v5也是__readfsqword(0x28u)反调试用的</p>
+<p>v0<br>这边有个变量叫v0，在下面被多次引用，我们选中它后按X键去查看引用，发现进行了多次值的判断，分别是100，115，119，27，97</p>
+<p>对这类数字、编码之类的要提起一种敏感心理，这里显然是字符的ASCII码值，写个简单脚本或直接查看ASCII码表，分别对应的字符为：d，s，w，ESC（键盘最左上角那个键）和a，经常玩3D冒险&#x2F;FPS类游戏的人对这四个字母可谓十分敏感了，wsad与ESC，和上下左右、退出等操作挂钩</p>
+<p>仔细观察，如果按键是wsad中的一个，都会去调用另一个函数，唯有输入为ESC键时，会直接将【0xFFFFFFFFLL】这个十六进制数返回，这个数其实就是十进制的-1（计算器按一下就知道了），末尾的LL是长整型的标志。而返回-1和main函数中v4被该函数赋值为1时结束循环是相呼应的，说明ESC键被输入的话，整个程序直接停止，更有游戏的韵味了吧</p>
+<p>v2<br>v2的这个变量也被多次引用，它的作用是在各个分支里面接收来自4个函数（见下图）的返回值，最终来控制do…while循环是否停止，显然当这些函数被调用并返回1时会停止do…while循环</p>
+<p>v3&amp;v4<br>v3的作用一目了然，用来作为v4这个字符数组的索引，它的值变换很单一，初始值为0，每次do…while循环自增一次</p>
+<p>v4是个字符数组，我点了半天没找到它的值是什么，结果突然发现在12行有个scanf函数，顿时给我气笑了，所以v4是用来接收输入字符的</p>
+<p>这下感觉通透多了，输入的字符串用v4存放，通过v3索引按照输入顺序访问这些字符，结合代码中的分支判断，有效的只能是WSAD和ESC这五个按键的字符，很有操作游戏的意思吧</p>
+<p>dword_202AB0<br>注意到这里又出现了之前在sub_11B4函数分析时，被初始化为0的变量dword_202AB0，可以看出它也被用作一个计数功能，可能取值为0，1，2，因为当它为2时整个while循环最终停止，这样代码就会执行到49行的flag获取成功提示以及50行的返回值1（这里和main函数中，v4被该函数的返回值赋值为1时结束循环又呼应上了）</p>
+<p>sub_86C函数分析<br>sub_86C函数关键代码只在8~19行，就是通过一个两层for循环对两个变量（dword_202AB4和dword_202AB8）进行赋值，两层for循环分别循环15次，总计225次</p>
+<p>除了一个新数组和两个新变量之外，我们还注意到一个眼熟的变量dword_202AB0，它已经在三个函数中出现了，前两次分别是sub_11B4函数初始化为0，sub_940函数作为计数器控制循环结束，而在这里，它被用于索引的部分参数去访问dword_202020这个数组</p>
+<p>前面分析出，dword_202AB0可能取值为0，1，2，那么【225 * dword_202AB0 + 15 * i + j】这个索引表达式的大致范围也就明确了——以255的倍数为一个界限，把一维数组dword_202020划分成了3部分</p>
+<p>那就去看看dword_202020这个数组里到底放了什么东西！</p>
+<p>双击跟进后发现是这些内容，这里灰色的注释直接表明了这个数组大小是675，因为是反汇编，这里的元素内容看起来有些难受，但大致能明白是些什么东西，比如【5 dup(1)】是连着5个1，其它内容同理了，观察一番发现，dword_202020数组中只存在4种数字：0、1、3、4</p>
+<p>分析到这里，很多东西已经清晰了，如果到这里还没意识到这像个迷宫游戏的话，在赛场上也很难ctf了，接下来就带着迷宫的猜测，继续分析后续代码</p>
+<p>sub_E23函数分析<br>这个函数是当判断按键为d，即右移操作时会调用的函数</p>
+<p>这里的4个变量在前面都是出现过的，dword_202020是数组（也就是游戏的迷宫图），而另外三个变量dword_202AB0、dword_202AB4和dword_202AB8的用途确实有点难想到，不过我觉得就算不知道它们三的作用，对这题的ctf影响没有很大，我们观察这个函数的逻辑判断——当某某数组元素为1时，它会被赋值为3，且比它索引小1的元素（即）会被赋值为1，而如果你它为4，则函数直接终止（因为返回1了，sub_940函数中的v2接收到1的返回值，会终止do…while循环），由此结合迷宫游戏的逻辑做出猜测：1代表的是走过的地方，3代表的是当前所在的地方（初始时，数组元素为3的地方，就相当于起点！），而4代表的是终点，再结合题目描述的</p>
+<p>看来，只要提取出迷宫图，并按照1是走过的路线、3是起点、4是终点这个规则，把路线划出来就能得出线索</p>
+<p>另外几个按键触发的函数这里就不一一展示了，因为它们的逻辑基本是一模一样</p>
+<p>提取迷宫<br>抛开代码审计，我认为本题最难的部分就是迷宫提取这步了，因为按常规思维，再简单的迷宫应该也是进行上下左右四个方向的二维地图，通过二维数组来实现才对啊？</p>
+<p>但是这里的迷宫数组却是个一维数组，也就是说，它利用了一些运算技巧，用一维数组去实现了二维迷宫图，反正蒟蒻博主是没这个天赋能自己悟出来了，就算看了wp也是想了很久才明白，下面就按我的理解来讲讲</p>
+<p>①这个迷宫是分三部分的，数组总大小是675，在sub_940函数和sub_86C函数对dword_202AB0这个变量的运用可以说明这点。dword_202AB0取值可能是0，1，2，在sub_86C函数中以255的倍数为一个界限，把一维数组dword_202020划分成了3部分，也就是三个迷宫</p>
+<p>②dword_202AB8变量代表的是列号，dword_202AB4代表的是行号，按键wsad任意一个调用的函数中能分析出这点，以按键d调用的sub_E23函数为例子</p>
+<p>只有当列号不为14（即小于14时）才能进行d键（即右移）操作，否则就越界了，这也间接说明了每个小迷宫的列数是15（索引从0开始），同理可以从ws两个键调用的函数分析出每个小迷宫的行数也是15，即15<em>15</em>3（3个小迷宫） &#x3D; 675，这么巧合的数字，说明猜测是正确的！</p>
+<p>③快捷键【shift+e】把dword_202020数组的元素提取出来，这里要注意，一定要选择下图的【initialized C variable】才能获取正确的数组元素，其它要么是16进制的，要么是16进制转10进制的</p>
+<p>④写脚本把一维数组转换成二维数组，以便判断上下左右四个方向的移动路径</p>
+<p>这里直接把数组内容全部复制到记事本中，然后去头掐尾把数组定义格式给删除，只留数组元素，注意这里删完后把第一个元素和其它元素对齐一下，接下来，直接把每行的空格、数组、逗号看成一行字符串，写脚本输入进去，并用数组保存索引为0的字符（博主用的C++编写，可以直接忽略输入的空格，所以数字是第一个元素，索引为0），最后再输出一遍保存在数组中的数字元素，同时控制行列即可</p>
+<p>运行项目并下载源码</p>
+<p>提取脚本<br>#include<iostream><br>using namespace std;<br>int main(){<br>	string ins;<br>	string ous[675];<br>	for(int i &#x3D; 0; i &lt; 675; i++){<br>		cin &gt;&gt; ins;<br>		ous[i] &#x3D; ins[0];<br>	}<br>	int row &#x3D; 0, col &#x3D; 0;<br>	for(int i &#x3D; 0; i &lt; 675; i++){<br>		cout &lt;&lt; ous[i] &lt;&lt; “ “;<br>		col++;&#x2F;&#x2F;累计输出几列<br>		if(col &#x3D;&#x3D; 15){<br>			cout &lt;&lt; endl;<br>			col &#x3D; 0;<br>			row++;&#x2F;&#x2F;累计输出几行<br>		}<br>		if(row &#x3D;&#x3D; 15){<br>			cout &lt;&lt; endl;<br>			row &#x3D; 0;<br>		}<br>	}<br>}<br>运行项目并下载源码<br>cpp<br>运行</p>
+<p>迷宫<br>1 1 1 1 1 0 0 0 0 0 0 0 0 0 0<br>1 1 1 1 1 0 3 1 1 0 0 0 0 0 0<br>1 1 1 1 1 0 0 0 1 0 0 0 0 0 0<br>1 1 1 1 1 0 0 0 1 0 0 0 0 0 0<br>1 1 1 1 1 0 0 0 1 1 1 1 1 0 0<br>1 1 1 1 1 0 0 0 0 0 0 0 1 0 0<br>1 1 1 1 1 0 0 0 0 0 0 0 1 0 0<br>1 1 1 1 1 0 0 0 0 0 0 0 1 1 0<br>1 1 1 1 1 0 0 0 0 0 0 0 0 1 0<br>1 1 1 1 1 0 0 0 0 0 0 0 0 4 0<br>1 1 1 1 1 1 1 1 1 1 1 1 1 1 1<br>1 1 1 1 1 1 1 1 1 1 1 1 1 1 1<br>1 1 1 1 1 1 1 1 1 1 1 1 1 1 1<br>1 1 1 1 1 1 1 1 1 1 1 1 1 1 1<br>1 1 1 1 1 1 1 1 1 1 1 1 1 1 1</p>
+<p>1 1 0 0 0 0 0 0 0 0 0 0 0 0 0<br>1 1 0 3 1 1 1 1 1 0 0 0 0 0 0<br>1 1 0 1 1 0 0 0 1 0 0 0 0 0 0<br>1 1 0 0 0 0 0 0 1 0 0 0 0 0 0<br>1 1 0 1 1 0 0 0 1 1 1 1 1 0 0<br>1 1 0 1 1 0 0 0 0 0 0 0 1 0 0<br>1 1 0 1 1 0 0 0 0 0 0 0 1 0 0<br>1 1 0 1 1 0 0 0 0 0 1 1 1 1 0<br>1 1 0 1 1 0 0 0 0 0 1 0 0 1 0<br>1 1 0 1 1 0 0 0 0 0 1 0 0 0 0<br>1 1 0 1 1 1 1 1 1 0 1 0 1 1 0<br>1 1 0 1 1 1 1 1 1 1 1 1 1 1 0<br>1 1 0 0 0 0 0 0 0 0 0 0 0 4 0<br>1 1 1 1 1 1 1 1 1 1 1 1 1 1 1<br>1 1 1 1 1 1 1 1 1 1 1 1 1 1 1</p>
+<p>0 0 0 0 0 0 0 0 0 0 0 0 0 0 0<br>0 3 1 1 0 0 0 0 0 0 0 0 0 0 0<br>0 0 0 1 0 1 1 1 0 0 0 0 0 0 0<br>0 0 0 1 1 1 0 1 0 0 0 0 0 0 0<br>0 0 0 0 1 0 0 1 0 0 0 0 0 0 0<br>0 1 1 0 1 0 0 1 0 0 0 0 0 0 0<br>0 0 1 1 1 0 0 1 0 0 0 0 0 0 0<br>0 0 0 0 0 0 0 1 0 0 0 0 0 0 0<br>0 0 0 0 0 0 0 1 1 1 1 0 0 0 0<br>0 0 0 0 0 0 0 0 0 0 1 0 0 0 0<br>0 0 0 0 0 0 0 0 0 0 1 0 0 0 0<br>0 0 0 0 0 0 0 0 0 0 1 0 0 0 0<br>0 0 0 0 0 0 0 0 0 0 1 1 1 1 0<br>0 0 0 0 0 0 0 0 0 0 0 0 0 1 0<br>0 0 0 0 0 0 0 0 0 0 0 0 0 4 0<br>运行项目并下载源码<br>cpp<br>运行<br>提取路线<br>有了迷宫，剩下的步骤就很简单了，按照1是走过的路线、3是起点、4是终点的规则以及上下左右分别为wsad字符的规则，写出路线<br>然后汇总成一个总串：ddsssddddsssdssdddddsssddddsssaassssdddsddssddwddssssssdddssssdddss</p>
+<p>再按照sub_940函数的提示，对这个字符串使用md5加密，得到最终flag</p>
+<p>原文链接：<a target="_blank" rel="noopener" href="https://blog.csdn.net/liKeQing1027520/article/details/136788592">https://blog.csdn.net/liKeQing1027520/article/details/136788592</a></p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://example.com/2026/02/27/%E8%BF%B7%E5%AE%AB%E9%97%AE%E9%A2%98/" data-id="cuidRtIeP43ttizixadL4X7Oq" data-title="" class="article-share-link"><span class="fa fa-share">Share</span></a>
+      
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+
+  
+    <article id="post-花指令学习" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2026/02/27/%E8%8A%B1%E6%8C%87%E4%BB%A4%E5%AD%A6%E4%B9%A0/" class="article-date">
+  <time class="dt-published" datetime="2026-02-26T18:22:33.726Z" itemprop="datePublished">2026-02-27</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <p>title: rust逆向解析题目复现rzip<br>date: 2026-1-31</p>
+<p>前言<br>本博客是参考了诸多大佬的文章而成的，博主本人也是菜鸟，可以看作是博主的学习笔记，因此我也会尽量写的详细，希望可以对你（萌新）有所帮助。路过大佬给个大腿抱抱&#x2F;(ㄒoㄒ)&#x2F;~~</p>
+<p>简介<br>花指令又名垃圾代码、脏字节，英文名是junk code。花指令就是在不影响程序运行的情况下，往真实代码中插入一些垃圾代码，从而影响反汇编器的正常运行；或是起到干扰逆向分析人员的静态分析，增加分析难度和分析时间。</p>
+<p>有句话，花指令的目的是阻挠逆向人员的分析，并不是阻止。因此，我们在去除花指令的时候，要有耐心，因为这应该不会是什么难点，慢慢来一定可以解决的。</p>
+<p>简单花指令<br>花指令分为俩种：</p>
+<p>不可执行花指令<br>可执行花指令<br>可执行花指令<br>顾名思义，可以执行的花指令，这部分垃圾代码会在程序运行的时候执行，但是执行这些指令没有任何意义，并不会改变寄存器的值，同时反汇编器也可以正常的反汇编这些指令。目的是为了增加静态分析的难度，加大逆向分析人员的工作量。</p>
+<p>不可执行花指令<br>不可以执行的花指令，这类花指令会使反编译器在反编译的时候出错，反汇编器可能错误的反汇编这些指令。根据反汇编的工作原理，只有花指令同正常指令的前几个字节被反汇编器识别成一组无用字节时，才能破坏反汇编的结果。因此，插入的花指令应当是一些不完整的指令，被插入的不完整指令可以是随机选择的。<br>为了能够有效迷惑反汇编器，同时又确保代码的正确运行，花指令必须满足两个基本特征，即：</p>
+<p>垃圾数据必须是某个合法指令的一部分。<br>程序运行时，花指令必须位于实际不可执行的代码路径。<br>原理：反汇编算法的设计缺陷<br>反汇编算法主要可以分为俩类：递归下降算法和线性扫描算法。<br>1）线性扫描算法<br>线性扫描算法p1从程序的入口点开始反汇编，然后对整个代码段进行扫描，反汇编扫描过程中所遇到的每条指令。线性扫描算法的缺点在于在冯诺依曼体系结构下，无法区分数据与代码，从而导致将代码段中嵌入的数据误解释为指令的操作码，以致最后得到错误的反汇编结果。<br>2）递归下降算法<br>递归下降采取另外一种不同的方法来定位指令。递归下降算法强调控制流的概念。控制流根据一条指令是否被另一条指令引用来决定是否对其进行反汇编，遇到非控制转移指令时顺序进行反汇编，而遇到控制转移指令时则从转移地址处开始进行反汇编。通过构造必然条件或者互补条件，使得反汇编出错。</p>
+<p>关于花指令的构造<br>永恒跳转<br>最简单的jmp指令<br>jmp LABEL1<br>  db junk_code;<br>LABEL1:<br>运行项目并下载源码<br>c<br>运行<br>1<br>2<br>3<br>这种jmp单次跳转只能骗过线性扫描算法，会被IDA识别（递归下降）。</p>
+<p>多层跳转<br>__asm {<br>        jmp LABEL1;<br>        _emit 68h;<br>    LABEL1:<br>        jmp LABEL2;<br>        _emit 0CDh;<br>        _emit 20h;<br>    LABEL2:<br>        jmp LABEL3;<br>        _emit 0E8h;<br>    LABEL3:<br>    }<br>运行项目并下载源码<br>c<br>运行<br>和单次跳转一样，这种也会被IDA识别。<br>为了骗过IDA，我们将上面的花指令改写一下，</p>
+<pre><code>   __asm {
+        _emit 0xE8
+        _emit 0xFF
+        //_emit 立即数：代表在这个位置插入一个数据，这里插入的是0xe8
+    }
+</code></pre>
+<p>————————————————<br>学习于<a target="_blank" rel="noopener" href="https://blog.csdn.net/Sciurdae/article/details/133750478%EF%BC%8C%E8%BF%99%E4%BD%8D%E5%8D%9A%E5%AE%A2%E5%A4%A7%E7%A5%9E">https://blog.csdn.net/Sciurdae/article/details/133750478，这位博客大神</a></p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://example.com/2026/02/27/%E8%8A%B1%E6%8C%87%E4%BB%A4%E5%AD%A6%E4%B9%A0/" data-id="cuidqkIYP9veUvcNMchY_AKuE" data-title="" class="article-share-link"><span class="fa fa-share">Share</span></a>
       
       
       
@@ -123,6 +578,11 @@
 
   
 
+
+  <nav id="page-nav">
+    
+    <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><a class="extend next" rel="next" href="/page/2/">Next &raquo;</a>
+  </nav>
 
 </section>
         
@@ -153,7 +613,23 @@
       <ul>
         
           <li>
-            <a href="/2026/02/22/hello-world/">Hello World</a>
+            <a href="/2026/02/27/asong/">(no title)</a>
+          </li>
+        
+          <li>
+            <a href="/2026/02/27/first/">(no title)</a>
+          </li>
+        
+          <li>
+            <a href="/2026/02/27/easy_go/">(no title)</a>
+          </li>
+        
+          <li>
+            <a href="/2026/02/27/%E6%A2%85%E6%B4%A5%E7%BE%8E%E6%B2%BB%E9%83%8E/">(no title)</a>
+          </li>
+        
+          <li>
+            <a href="/2026/02/27/%E9%87%91%E7%9B%BE%E6%9D%AF%E5%AF%86%E7%A0%81%E9%A2%98%E5%A4%8D%E7%8E%B0/">(no title)</a>
           </li>
         
       </ul>

@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  
+  <title>Hexo</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="description" content="title: 迷宫问题date: 2026-1-31 题目为攻防世界的reverse_re3、main函数分析main函数十分的简单，说明关键代码都在函数里了 ​ sub_940是需要关键分析的函数，每次循环都会带回返回值赋值给v4，等于1或者-1时都将使循环停止 sub_11B4函数分析双击跟进sub_11B4函数，这个函数也是十分简洁，第5行和第7行的__readfsqword(0x28u)经">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Hexo">
+<meta property="og:url" content="http://example.com/2026/02/27/%E8%BF%B7%E5%AE%AB%E9%97%AE%E9%A2%98/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="title: 迷宫问题date: 2026-1-31 题目为攻防世界的reverse_re3、main函数分析main函数十分的简单，说明关键代码都在函数里了 ​ sub_940是需要关键分析的函数，每次循环都会带回返回值赋值给v4，等于1或者-1时都将使循环停止 sub_11B4函数分析双击跟进sub_11B4函数，这个函数也是十分简洁，第5行和第7行的__readfsqword(0x28u)经">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2026-02-26T18:52:15.853Z">
+<meta property="article:modified_time" content="2026-03-10T11:27:27.423Z">
+<meta property="article:author" content="John Doe">
+<meta name="twitter:card" content="summary">
+  
+    <link rel="alternate" href="/atom.xml" title="Hexo" type="application/atom+xml">
+  
+  
+    <link rel="shortcut icon" href="/favicon.png">
+  
+  
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  
+    
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.min.css">
+
+  
+  
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/fork-awesome@1.2.0/css/fork-awesome.min.css">
+
+<meta name="generator" content="Hexo 8.1.1"></head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">Hexo</a>
+      </h1>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"><span class="fa fa-bars"></span></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+        
+          <a class="nav-icon" href="/atom.xml" title="RSS Feed"><span class="fa fa-rss"></span></a>
+        
+        <a class="nav-icon nav-search-btn" title="Search"><span class="fa fa-search"></span></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://example.com"></form>
+      </div>
+    </div>
+  </div>
+</header>
+
+      <div class="outer">
+        <section id="main"><article id="post-迷宫问题" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2026/02/27/%E8%BF%B7%E5%AE%AB%E9%97%AE%E9%A2%98/" class="article-date">
+  <time class="dt-published" datetime="2026-02-26T18:52:15.853Z" itemprop="datePublished">2026-02-27</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <p>title: 迷宫问题<br>date: 2026-1-31</p>
+<p>题目为攻防世界的reverse_re3、<br>main函数分析<br>main函数十分的简单，说明关键代码都在函数里了</p>
+<p>​</p>
+<p>sub_940是需要关键分析的函数，每次循环都会带回返回值赋值给v4，等于1或者-1时都将使循环停止</p>
+<p>sub_11B4函数分析<br>双击跟进sub_11B4函数，这个函数也是十分简洁，第5行和第7行的__readfsqword(0x28u)经常会出现，看了其他大佬的wp说是用了反调试，但讲原理的目前还没搜到。。先记下来吧，等以后有缘自会理解的</p>
+<p>第6行则是对dword_202AB0变量赋值了0，现在还不太清楚这个作用，先留个心眼</p>
+<p>​</p>
+<p>sub_940函数分析<br>双击跟进sub_940函数，这个就是关键函数了，这里的变量v5也是__readfsqword(0x28u)反调试用的</p>
+<p>v0<br>这边有个变量叫v0，在下面被多次引用，我们选中它后按X键去查看引用，发现进行了多次值的判断，分别是100，115，119，27，97</p>
+<p>对这类数字、编码之类的要提起一种敏感心理，这里显然是字符的ASCII码值，写个简单脚本或直接查看ASCII码表，分别对应的字符为：d，s，w，ESC（键盘最左上角那个键）和a，经常玩3D冒险&#x2F;FPS类游戏的人对这四个字母可谓十分敏感了，wsad与ESC，和上下左右、退出等操作挂钩</p>
+<p>仔细观察，如果按键是wsad中的一个，都会去调用另一个函数，唯有输入为ESC键时，会直接将【0xFFFFFFFFLL】这个十六进制数返回，这个数其实就是十进制的-1（计算器按一下就知道了），末尾的LL是长整型的标志。而返回-1和main函数中v4被该函数赋值为1时结束循环是相呼应的，说明ESC键被输入的话，整个程序直接停止，更有游戏的韵味了吧</p>
+<p>v2<br>v2的这个变量也被多次引用，它的作用是在各个分支里面接收来自4个函数（见下图）的返回值，最终来控制do…while循环是否停止，显然当这些函数被调用并返回1时会停止do…while循环</p>
+<p>v3&amp;v4<br>v3的作用一目了然，用来作为v4这个字符数组的索引，它的值变换很单一，初始值为0，每次do…while循环自增一次</p>
+<p>v4是个字符数组，我点了半天没找到它的值是什么，结果突然发现在12行有个scanf函数，顿时给我气笑了，所以v4是用来接收输入字符的</p>
+<p>这下感觉通透多了，输入的字符串用v4存放，通过v3索引按照输入顺序访问这些字符，结合代码中的分支判断，有效的只能是WSAD和ESC这五个按键的字符，很有操作游戏的意思吧</p>
+<p>dword_202AB0<br>注意到这里又出现了之前在sub_11B4函数分析时，被初始化为0的变量dword_202AB0，可以看出它也被用作一个计数功能，可能取值为0，1，2，因为当它为2时整个while循环最终停止，这样代码就会执行到49行的flag获取成功提示以及50行的返回值1（这里和main函数中，v4被该函数的返回值赋值为1时结束循环又呼应上了）</p>
+<p>sub_86C函数分析<br>sub_86C函数关键代码只在8~19行，就是通过一个两层for循环对两个变量（dword_202AB4和dword_202AB8）进行赋值，两层for循环分别循环15次，总计225次</p>
+<p>除了一个新数组和两个新变量之外，我们还注意到一个眼熟的变量dword_202AB0，它已经在三个函数中出现了，前两次分别是sub_11B4函数初始化为0，sub_940函数作为计数器控制循环结束，而在这里，它被用于索引的部分参数去访问dword_202020这个数组</p>
+<p>前面分析出，dword_202AB0可能取值为0，1，2，那么【225 * dword_202AB0 + 15 * i + j】这个索引表达式的大致范围也就明确了——以255的倍数为一个界限，把一维数组dword_202020划分成了3部分</p>
+<p>那就去看看dword_202020这个数组里到底放了什么东西！</p>
+<p>双击跟进后发现是这些内容，这里灰色的注释直接表明了这个数组大小是675，因为是反汇编，这里的元素内容看起来有些难受，但大致能明白是些什么东西，比如【5 dup(1)】是连着5个1，其它内容同理了，观察一番发现，dword_202020数组中只存在4种数字：0、1、3、4</p>
+<p>分析到这里，很多东西已经清晰了，如果到这里还没意识到这像个迷宫游戏的话，在赛场上也很难ctf了，接下来就带着迷宫的猜测，继续分析后续代码</p>
+<p>sub_E23函数分析<br>这个函数是当判断按键为d，即右移操作时会调用的函数</p>
+<p>这里的4个变量在前面都是出现过的，dword_202020是数组（也就是游戏的迷宫图），而另外三个变量dword_202AB0、dword_202AB4和dword_202AB8的用途确实有点难想到，不过我觉得就算不知道它们三的作用，对这题的ctf影响没有很大，我们观察这个函数的逻辑判断——当某某数组元素为1时，它会被赋值为3，且比它索引小1的元素（即）会被赋值为1，而如果你它为4，则函数直接终止（因为返回1了，sub_940函数中的v2接收到1的返回值，会终止do…while循环），由此结合迷宫游戏的逻辑做出猜测：1代表的是走过的地方，3代表的是当前所在的地方（初始时，数组元素为3的地方，就相当于起点！），而4代表的是终点，再结合题目描述的</p>
+<p>看来，只要提取出迷宫图，并按照1是走过的路线、3是起点、4是终点这个规则，把路线划出来就能得出线索</p>
+<p>另外几个按键触发的函数这里就不一一展示了，因为它们的逻辑基本是一模一样</p>
+<p>提取迷宫<br>抛开代码审计，我认为本题最难的部分就是迷宫提取这步了，因为按常规思维，再简单的迷宫应该也是进行上下左右四个方向的二维地图，通过二维数组来实现才对啊？</p>
+<p>但是这里的迷宫数组却是个一维数组，也就是说，它利用了一些运算技巧，用一维数组去实现了二维迷宫图，反正蒟蒻博主是没这个天赋能自己悟出来了，就算看了wp也是想了很久才明白，下面就按我的理解来讲讲</p>
+<p>①这个迷宫是分三部分的，数组总大小是675，在sub_940函数和sub_86C函数对dword_202AB0这个变量的运用可以说明这点。dword_202AB0取值可能是0，1，2，在sub_86C函数中以255的倍数为一个界限，把一维数组dword_202020划分成了3部分，也就是三个迷宫</p>
+<p>②dword_202AB8变量代表的是列号，dword_202AB4代表的是行号，按键wsad任意一个调用的函数中能分析出这点，以按键d调用的sub_E23函数为例子</p>
+<p>只有当列号不为14（即小于14时）才能进行d键（即右移）操作，否则就越界了，这也间接说明了每个小迷宫的列数是15（索引从0开始），同理可以从ws两个键调用的函数分析出每个小迷宫的行数也是15，即15<em>15</em>3（3个小迷宫） &#x3D; 675，这么巧合的数字，说明猜测是正确的！</p>
+<p>③快捷键【shift+e】把dword_202020数组的元素提取出来，这里要注意，一定要选择下图的【initialized C variable】才能获取正确的数组元素，其它要么是16进制的，要么是16进制转10进制的</p>
+<p>④写脚本把一维数组转换成二维数组，以便判断上下左右四个方向的移动路径</p>
+<p>这里直接把数组内容全部复制到记事本中，然后去头掐尾把数组定义格式给删除，只留数组元素，注意这里删完后把第一个元素和其它元素对齐一下，接下来，直接把每行的空格、数组、逗号看成一行字符串，写脚本输入进去，并用数组保存索引为0的字符（博主用的C++编写，可以直接忽略输入的空格，所以数字是第一个元素，索引为0），最后再输出一遍保存在数组中的数字元素，同时控制行列即可</p>
+<p>运行项目并下载源码</p>
+<p>提取脚本<br>#include<iostream><br>using namespace std;<br>int main(){<br>	string ins;<br>	string ous[675];<br>	for(int i &#x3D; 0; i &lt; 675; i++){<br>		cin &gt;&gt; ins;<br>		ous[i] &#x3D; ins[0];<br>	}<br>	int row &#x3D; 0, col &#x3D; 0;<br>	for(int i &#x3D; 0; i &lt; 675; i++){<br>		cout &lt;&lt; ous[i] &lt;&lt; “ “;<br>		col++;&#x2F;&#x2F;累计输出几列<br>		if(col &#x3D;&#x3D; 15){<br>			cout &lt;&lt; endl;<br>			col &#x3D; 0;<br>			row++;&#x2F;&#x2F;累计输出几行<br>		}<br>		if(row &#x3D;&#x3D; 15){<br>			cout &lt;&lt; endl;<br>			row &#x3D; 0;<br>		}<br>	}<br>}<br>运行项目并下载源码<br>cpp<br>运行</p>
+<p>迷宫<br>1 1 1 1 1 0 0 0 0 0 0 0 0 0 0<br>1 1 1 1 1 0 3 1 1 0 0 0 0 0 0<br>1 1 1 1 1 0 0 0 1 0 0 0 0 0 0<br>1 1 1 1 1 0 0 0 1 0 0 0 0 0 0<br>1 1 1 1 1 0 0 0 1 1 1 1 1 0 0<br>1 1 1 1 1 0 0 0 0 0 0 0 1 0 0<br>1 1 1 1 1 0 0 0 0 0 0 0 1 0 0<br>1 1 1 1 1 0 0 0 0 0 0 0 1 1 0<br>1 1 1 1 1 0 0 0 0 0 0 0 0 1 0<br>1 1 1 1 1 0 0 0 0 0 0 0 0 4 0<br>1 1 1 1 1 1 1 1 1 1 1 1 1 1 1<br>1 1 1 1 1 1 1 1 1 1 1 1 1 1 1<br>1 1 1 1 1 1 1 1 1 1 1 1 1 1 1<br>1 1 1 1 1 1 1 1 1 1 1 1 1 1 1<br>1 1 1 1 1 1 1 1 1 1 1 1 1 1 1</p>
+<p>1 1 0 0 0 0 0 0 0 0 0 0 0 0 0<br>1 1 0 3 1 1 1 1 1 0 0 0 0 0 0<br>1 1 0 1 1 0 0 0 1 0 0 0 0 0 0<br>1 1 0 0 0 0 0 0 1 0 0 0 0 0 0<br>1 1 0 1 1 0 0 0 1 1 1 1 1 0 0<br>1 1 0 1 1 0 0 0 0 0 0 0 1 0 0<br>1 1 0 1 1 0 0 0 0 0 0 0 1 0 0<br>1 1 0 1 1 0 0 0 0 0 1 1 1 1 0<br>1 1 0 1 1 0 0 0 0 0 1 0 0 1 0<br>1 1 0 1 1 0 0 0 0 0 1 0 0 0 0<br>1 1 0 1 1 1 1 1 1 0 1 0 1 1 0<br>1 1 0 1 1 1 1 1 1 1 1 1 1 1 0<br>1 1 0 0 0 0 0 0 0 0 0 0 0 4 0<br>1 1 1 1 1 1 1 1 1 1 1 1 1 1 1<br>1 1 1 1 1 1 1 1 1 1 1 1 1 1 1</p>
+<p>0 0 0 0 0 0 0 0 0 0 0 0 0 0 0<br>0 3 1 1 0 0 0 0 0 0 0 0 0 0 0<br>0 0 0 1 0 1 1 1 0 0 0 0 0 0 0<br>0 0 0 1 1 1 0 1 0 0 0 0 0 0 0<br>0 0 0 0 1 0 0 1 0 0 0 0 0 0 0<br>0 1 1 0 1 0 0 1 0 0 0 0 0 0 0<br>0 0 1 1 1 0 0 1 0 0 0 0 0 0 0<br>0 0 0 0 0 0 0 1 0 0 0 0 0 0 0<br>0 0 0 0 0 0 0 1 1 1 1 0 0 0 0<br>0 0 0 0 0 0 0 0 0 0 1 0 0 0 0<br>0 0 0 0 0 0 0 0 0 0 1 0 0 0 0<br>0 0 0 0 0 0 0 0 0 0 1 0 0 0 0<br>0 0 0 0 0 0 0 0 0 0 1 1 1 1 0<br>0 0 0 0 0 0 0 0 0 0 0 0 0 1 0<br>0 0 0 0 0 0 0 0 0 0 0 0 0 4 0<br>运行项目并下载源码<br>cpp<br>运行<br>提取路线<br>有了迷宫，剩下的步骤就很简单了，按照1是走过的路线、3是起点、4是终点的规则以及上下左右分别为wsad字符的规则，写出路线<br>然后汇总成一个总串：ddsssddddsssdssdddddsssddddsssaassssdddsddssddwddssssssdddssssdddss</p>
+<p>再按照sub_940函数的提示，对这个字符串使用md5加密，得到最终flag</p>
+<p>原文链接：<a target="_blank" rel="noopener" href="https://blog.csdn.net/liKeQing1027520/article/details/136788592">https://blog.csdn.net/liKeQing1027520/article/details/136788592</a></p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://example.com/2026/02/27/%E8%BF%B7%E5%AE%AB%E9%97%AE%E9%A2%98/" data-id="cuidRtIeP43ttizixadL4X7Oq" data-title="" class="article-share-link"><span class="fa fa-share">Share</span></a>
+      
+      
+      
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2026/02/27/re4-unvm-me/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Newer</strong>
+      <div class="article-nav-title">
+        
+          (no title)
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2026/02/27/%E8%8A%B1%E6%8C%87%E4%BB%A4%E5%AD%A6%E4%B9%A0/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title"></div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+
+  
+    
+
+  
+    
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2026/02/">February 2026</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Recent Posts</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2026/02/27/asong/">(no title)</a>
+          </li>
+        
+          <li>
+            <a href="/2026/02/27/first/">(no title)</a>
+          </li>
+        
+          <li>
+            <a href="/2026/02/27/easy_go/">(no title)</a>
+          </li>
+        
+          <li>
+            <a href="/2026/02/27/%E6%A2%85%E6%B4%A5%E7%BE%8E%E6%B2%BB%E9%83%8E/">(no title)</a>
+          </li>
+        
+          <li>
+            <a href="/2026/02/27/%E9%87%91%E7%9B%BE%E6%9D%AF%E5%AF%86%E7%A0%81%E9%A2%98%E5%A4%8D%E7%8E%B0/">(no title)</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      
+      &copy; 2026 John Doe<br>
+      Powered by <a href="https://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+
+<script src="/js/jquery-3.6.4.min.js"></script>
+
+
+
+  
+<script src="/fancybox/jquery.fancybox.min.js"></script>
+
+
+
+
+<script src="/js/script.js"></script>
+
+
+
+
+
+  </div>
+</body>
+</html>

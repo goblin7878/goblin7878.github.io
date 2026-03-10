@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  
+  <title>Hexo</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="description" content="title: 迷宫问题date: 2026-2-26 攻防世界easy_Mazemaze类：1.内存中画出一张地图（地图变换） 2.明确起点和终点 3.（四个字符对应上下左右）flag就是走出的路径 题目提示是maze类的，找上面三个关键点 复制代码  1 int __cdecl main(int argc, const char *argv, const char *envp)  2 {  3">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Hexo">
+<meta property="og:url" content="http://example.com/2026/02/27/easy_Maze/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="title: 迷宫问题date: 2026-2-26 攻防世界easy_Mazemaze类：1.内存中画出一张地图（地图变换） 2.明确起点和终点 3.（四个字符对应上下左右）flag就是走出的路径 题目提示是maze类的，找上面三个关键点 复制代码  1 int __cdecl main(int argc, const char *argv, const char *envp)  2 {  3">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2026-02-26T20:25:37.941Z">
+<meta property="article:modified_time" content="2026-02-26T20:27:22.621Z">
+<meta property="article:author" content="John Doe">
+<meta name="twitter:card" content="summary">
+  
+    <link rel="alternate" href="/atom.xml" title="Hexo" type="application/atom+xml">
+  
+  
+    <link rel="shortcut icon" href="/favicon.png">
+  
+  
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  
+    
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.min.css">
+
+  
+  
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/fork-awesome@1.2.0/css/fork-awesome.min.css">
+
+<meta name="generator" content="Hexo 8.1.1"></head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">Hexo</a>
+      </h1>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"><span class="fa fa-bars"></span></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+        
+          <a class="nav-icon" href="/atom.xml" title="RSS Feed"><span class="fa fa-rss"></span></a>
+        
+        <a class="nav-icon nav-search-btn" title="Search"><span class="fa fa-search"></span></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://example.com"></form>
+      </div>
+    </div>
+  </div>
+</header>
+
+      <div class="outer">
+        <section id="main"><article id="post-easy_Maze" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2026/02/27/easy_Maze/" class="article-date">
+  <time class="dt-published" datetime="2026-02-26T20:25:37.941Z" itemprop="datePublished">2026-02-27</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <p>title: 迷宫问题<br>date: 2026-2-26</p>
+<p>攻防世界easy_Maze<br>maze类：1.内存中画出一张地图（地图变换） 2.明确起点和终点 3.（四个字符对应上下左右）flag就是走出的路径</p>
+<p>题目提示是maze类的，找上面三个关键点</p>
+<p>复制代码<br>  1 int __cdecl main(int argc, const char *<em>argv, const char *<em>envp)<br>  2 {<br>  3   __int64 v3; &#x2F;&#x2F; rax<br>  4   int v5[7]; &#x2F;&#x2F; [rsp+0h] [rbp-270h]<br>  5   int v6; &#x2F;&#x2F; [rsp+C0h] [rbp-1B0h]<br>  6   int v7[7]; &#x2F;&#x2F; [rsp+D0h] [rbp-1A0h]<br>  7   int v8; &#x2F;&#x2F; [rsp+190h] [rbp-E0h]<br>  8   int v9[7]; &#x2F;&#x2F; [rsp+1A0h] [rbp-D0h]<br>  9   int v10; &#x2F;&#x2F; [rsp+1BCh] [rbp-B4h]<br> 10   int v11; &#x2F;&#x2F; [rsp+1C0h] [rbp-B0h]<br> 11   int v12; &#x2F;&#x2F; [rsp+1C4h] [rbp-ACh]<br> 12   int v13; &#x2F;&#x2F; [rsp+1C8h] [rbp-A8h]<br> 13   int v14; &#x2F;&#x2F; [rsp+1CCh] [rbp-A4h]<br> 14   int v15; &#x2F;&#x2F; [rsp+1D0h] [rbp-A0h]<br> 15   int v16; &#x2F;&#x2F; [rsp+1D4h] [rbp-9Ch]<br> 16   int v17; &#x2F;&#x2F; [rsp+1D8h] [rbp-98h]<br> 17   int v18; &#x2F;&#x2F; [rsp+1DCh] [rbp-94h]<br> 18   int v19; &#x2F;&#x2F; [rsp+1E0h] [rbp-90h]<br> 19   int v20; &#x2F;&#x2F; [rsp+1E4h] [rbp-8Ch]<br> 20   int v21; &#x2F;&#x2F; [rsp+1E8h] [rbp-88h]<br> 21   int v22; &#x2F;&#x2F; [rsp+1ECh] [rbp-84h]<br> 22   int v23; &#x2F;&#x2F; [rsp+1F0h] [rbp-80h]<br> 23   int v24; &#x2F;&#x2F; [rsp+1F4h] [rbp-7Ch]<br> 24   int v25; &#x2F;&#x2F; [rsp+1F8h] [rbp-78h]<br> 25   int v26; &#x2F;&#x2F; [rsp+1FCh] [rbp-74h]<br> 26   int v27; &#x2F;&#x2F; [rsp+200h] [rbp-70h]<br> 27   int v28; &#x2F;&#x2F; [rsp+204h] [rbp-6Ch]<br> 28   int v29; &#x2F;&#x2F; [rsp+208h] [rbp-68h]<br> 29   int v30; &#x2F;&#x2F; [rsp+20Ch] [rbp-64h]<br> 30   int v31; &#x2F;&#x2F; [rsp+210h] [rbp-60h]<br> 31   int v32; &#x2F;&#x2F; [rsp+214h] [rbp-5Ch]<br> 32   int v33; &#x2F;&#x2F; [rsp+218h] [rbp-58h]<br> 33   int v34; &#x2F;&#x2F; [rsp+21Ch] [rbp-54h]<br> 34   int v35; &#x2F;&#x2F; [rsp+220h] [rbp-50h]<br> 35   int v36; &#x2F;&#x2F; [rsp+224h] [rbp-4Ch]<br> 36   int v37; &#x2F;&#x2F; [rsp+228h] [rbp-48h]<br> 37   int v38; &#x2F;&#x2F; [rsp+22Ch] [rbp-44h]<br> 38   int v39; &#x2F;&#x2F; [rsp+230h] [rbp-40h]<br> 39   int v40; &#x2F;&#x2F; [rsp+234h] [rbp-3Ch]<br> 40   int v41; &#x2F;&#x2F; [rsp+238h] [rbp-38h]<br> 41   int v42; &#x2F;&#x2F; [rsp+23Ch] [rbp-34h]<br> 42   int v43; &#x2F;&#x2F; [rsp+240h] [rbp-30h]<br> 43   int v44; &#x2F;&#x2F; [rsp+244h] [rbp-2Ch]<br> 44   int v45; &#x2F;&#x2F; [rsp+248h] [rbp-28h]<br> 45   int v46; &#x2F;&#x2F; [rsp+24Ch] [rbp-24h]<br> 46   int v47; &#x2F;&#x2F; [rsp+250h] [rbp-20h]<br> 47   int v48; &#x2F;&#x2F; [rsp+254h] [rbp-1Ch]<br> 48   int v49; &#x2F;&#x2F; [rsp+258h] [rbp-18h]<br> 49   int v50; &#x2F;&#x2F; [rsp+25Ch] [rbp-14h]<br> 50   int v51; &#x2F;&#x2F; [rsp+260h] [rbp-10h]<br> 51<br> 52   v9[0] &#x3D; 1;<br> 53   v9[1] &#x3D; 1;<br> 54   v9[2] &#x3D; -1;<br> 55   v9[3] &#x3D; 1;<br> 56   v9[4] &#x3D; -1;<br> 57   v9[5] &#x3D; 1;<br> 58   v9[6] &#x3D; -1;<br> 59   v10 &#x3D; 0;<br> 60   v11 &#x3D; 0;<br> 61   v12 &#x3D; 0;<br> 62   v13 &#x3D; 0;<br> 63   v14 &#x3D; 1;<br> 64   v15 &#x3D; -1;<br> 65   v16 &#x3D; 0;<br> 66   v17 &#x3D; 0;<br> 67   v18 &#x3D; 1;<br> 68   v19 &#x3D; 0;<br> 69   v20 &#x3D; 0;<br> 70   v21 &#x3D; 1;<br> 71   v22 &#x3D; 0;<br> 72   v23 &#x3D; -1;<br> 73   v24 &#x3D; -1;<br> 74   v25 &#x3D; 0;<br> 75   v26 &#x3D; 1;<br> 76   v27 &#x3D; 0;<br> 77   v28 &#x3D; 1;<br> 78   v29 &#x3D; -1;<br> 79   v30 &#x3D; 0;<br> 80   v31 &#x3D; -1;<br> 81   v32 &#x3D; 0;<br> 82   v33 &#x3D; 0;<br> 83   v34 &#x3D; 0;<br> 84   v35 &#x3D; 0;<br> 85   v36 &#x3D; 0;<br> 86   v37 &#x3D; 1;<br> 87   v38 &#x3D; -1;<br> 88   v39 &#x3D; -1;<br> 89   v40 &#x3D; 1;<br> 90   v41 &#x3D; -1;<br> 91   v42 &#x3D; 0;<br> 92   v43 &#x3D; -1;<br> 93   v44 &#x3D; 2;<br> 94   v45 &#x3D; 1;<br> 95   v46 &#x3D; -1;<br> 96   v47 &#x3D; 0;<br> 97   v48 &#x3D; 0;<br> 98   v49 &#x3D; -1;<br> 99   v50 &#x3D; 1;<br>100   v51 &#x3D; 0;<br>101   memset(v7, 0, 0xC0uLL);<br>102   v8 &#x3D; 0;<br>103   memset(v5, 0, 0xC0uLL);<br>104   v6 &#x3D; 0;<br>105   Step_0((int (</em>)[7])v9, 7, (int (*)[7])v7); #地图变换<br>106   Step_1((int (</em>)[7])v7, 7, (int (<em>)[7])v5); #地图变换<br>107   v3 &#x3D; std::operator&lt;&lt;&lt;std::char_traits<char>&gt;(&amp;_bss_start, “Please help me out!”);<br>108   std::ostream::operator&lt;&lt;(v3, &amp;std::endl&lt;char,std::char_traits<char>&gt;);<br>109   Step_2((int (</em>)[7])v5); #输入，验证<br>110   system(“pause”);<br>111   return 0;<br>112 }<br>复制代码<br>进入Step_2函数</p>
+<p>复制代码<br>__int64 __fastcall Step_2(int (*a1)[7])<br>{<br>  int v1; &#x2F;&#x2F; eax<br>  __int64 v2; &#x2F;&#x2F; rax<br>  __int64 v3; &#x2F;&#x2F; rax<br>  __int64 result; &#x2F;&#x2F; rax<br>  __int64 v5; &#x2F;&#x2F; rax<br>  char v6[35]; &#x2F;&#x2F; [rsp+10h] [rbp-30h]<br>  char v7; &#x2F;&#x2F; [rsp+33h] [rbp-Dh]<br>  int v8; &#x2F;&#x2F; [rsp+34h] [rbp-Ch]<br>  int v9; &#x2F;&#x2F; [rsp+38h] [rbp-8h]<br>  int v10; &#x2F;&#x2F; [rsp+3Ch] [rbp-4h]</p>
+<p>  v10 &#x3D; 0;<br>  v9 &#x3D; 0;<br>  v8 &#x3D; 0;   #初始位置[0][0]<br>  while ( v8 &lt;&#x3D; 29 &amp;&amp; (*a1)[7 * v10 + v9] &#x3D;&#x3D; 1 )  #最多30步，走1<br>  {<br>    std::operator&gt;&gt;&lt;char,std::char_traits<char>&gt;(&amp;std::cin, &amp;v7);<br>    v1 &#x3D; v8++;<br>    v6[v1] &#x3D; v7;<br>    if ( v7 &#x3D;&#x3D; ‘d’ ) #向右<br>    {<br>      ++v9;<br>    }<br>    else if ( v7 &gt; ‘d’ )<br>    {<br>      if ( v7 &#x3D;&#x3D; ‘s’ ) #向下<br>      {<br>        ++v10;<br>      }<br>      else<br>      {<br>        if ( v7 !&#x3D; ‘w’ ) #向上<br>          goto LABEL_14;<br>        –v10;<br>      }<br>    }<br>    else if ( v7 &#x3D;&#x3D; ‘a’ ) #向左<br>    {<br>      –v9;<br>    }<br>    else<br>    {<br>LABEL_14:<br>      v2 &#x3D; std::operator&lt;&lt;&lt;std::char_traits<char>&gt;(&amp;_bss_start, “include illegal words.”);<br>      std::ostream::operator&lt;&lt;(v2, &amp;std::endl&lt;char,std::char_traits<char>&gt;);<br>    }<br>  }<br>  if ( v10 !&#x3D; 6 || v9 !&#x3D; 6 ) #结束位置[6][6]<br>  {<br>    v5 &#x3D; std::operator&lt;&lt;&lt;std::char_traits<char>&gt;(&amp;_bss_start, “Oh no!,Please try again~~”);<br>    std::ostream::operator&lt;&lt;(v5, &amp;std::endl&lt;char,std::char_traits<char>&gt;);<br>    result &#x3D; 0LL;<br>  }<br>  else<br>  {<br>    v3 &#x3D; std::operator&lt;&lt;&lt;std::char_traits<char>&gt;(&amp;_bss_start, “Congratulations!”);<br>    std::ostream::operator&lt;&lt;(v3, &amp;std::endl&lt;char,std::char_traits<char>&gt;);<br>    output(v6, v8);<br>    result &#x3D; 1LL;<br>  }<br>  return result;<br>}<br>复制代码<br>综上：<br>1.地图两次变换（可通过动态调试找到）<br>2.起点[0][0]到[6][6]<br>3.wasd 对应上左下右</p>
+<p>动态调试地图（这里小坑，需要设置显示的格式（下图））（设置成4byte_Integer和Signed）</p>
+<p>动调dump出地图</p>
+<p>地图整出来，走法</p>
+<p>ssddwdwdddssaasasaaassddddwdds</p>
+<p>UNCTF{ssddwdwdddssaasasaaassddddwdds}</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://example.com/2026/02/27/easy_Maze/" data-id="cuidSYABjpwe9w5D1j71MZS1y" data-title="" class="article-share-link"><span class="fa fa-share">Share</span></a>
+      
+      
+      
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2026/02/27/reverse_box/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Newer</strong>
+      <div class="article-nav-title">
+        
+          (no title)
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2026/02/27/re4-unvm-me/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title"></div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+
+  
+    
+
+  
+    
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2026/02/">February 2026</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Recent Posts</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2026/02/27/asong/">(no title)</a>
+          </li>
+        
+          <li>
+            <a href="/2026/02/27/first/">(no title)</a>
+          </li>
+        
+          <li>
+            <a href="/2026/02/27/easy_go/">(no title)</a>
+          </li>
+        
+          <li>
+            <a href="/2026/02/27/%E6%A2%85%E6%B4%A5%E7%BE%8E%E6%B2%BB%E9%83%8E/">(no title)</a>
+          </li>
+        
+          <li>
+            <a href="/2026/02/27/%E9%87%91%E7%9B%BE%E6%9D%AF%E5%AF%86%E7%A0%81%E9%A2%98%E5%A4%8D%E7%8E%B0/">(no title)</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      
+      &copy; 2026 John Doe<br>
+      Powered by <a href="https://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+
+<script src="/js/jquery-3.6.4.min.js"></script>
+
+
+
+  
+<script src="/fancybox/jquery.fancybox.min.js"></script>
+
+
+
+
+<script src="/js/script.js"></script>
+
+
+
+
+
+  </div>
+</body>
+</html>

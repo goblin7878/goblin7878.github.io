@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  
+  <title>Hexo</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="description" content="title: 学习date: 2026-2-26 学到知识点：类似于base系列的 字节串分割编码技巧。字符频率统计算法识别。题解：题目地址：攻防世界 (xctf.org.cn) ida进入，可以看到就几个函数，进去逐一分析功能：首先时接受用户的输入，再check一下flag的形式，接着读取girl文件来初始化v4，最后进行flag的加密。 sub_400bf这个函数 直接从girl函数开始分析，">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Hexo">
+<meta property="og:url" content="http://example.com/2026/02/27/asong/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="title: 学习date: 2026-2-26 学到知识点：类似于base系列的 字节串分割编码技巧。字符频率统计算法识别。题解：题目地址：攻防世界 (xctf.org.cn) ida进入，可以看到就几个函数，进去逐一分析功能：首先时接受用户的输入，再check一下flag的形式，接着读取girl文件来初始化v4，最后进行flag的加密。 sub_400bf这个函数 直接从girl函数开始分析，">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="http://example.com/image-10.png">
+<meta property="og:image" content="http://example.com/image-11.png">
+<meta property="og:image" content="http://example.com/image-12.png">
+<meta property="og:image" content="http://example.com/image-13.png">
+<meta property="og:image" content="http://example.com/image-14.png">
+<meta property="article:published_time" content="2026-02-26T21:02:28.272Z">
+<meta property="article:modified_time" content="2026-02-26T21:04:36.972Z">
+<meta property="article:author" content="John Doe">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://example.com/image-10.png">
+  
+    <link rel="alternate" href="/atom.xml" title="Hexo" type="application/atom+xml">
+  
+  
+    <link rel="shortcut icon" href="/favicon.png">
+  
+  
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  
+    
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.min.css">
+
+  
+  
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/fork-awesome@1.2.0/css/fork-awesome.min.css">
+
+<meta name="generator" content="Hexo 8.1.1"></head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">Hexo</a>
+      </h1>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"><span class="fa fa-bars"></span></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+        
+          <a class="nav-icon" href="/atom.xml" title="RSS Feed"><span class="fa fa-rss"></span></a>
+        
+        <a class="nav-icon nav-search-btn" title="Search"><span class="fa fa-search"></span></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://example.com"></form>
+      </div>
+    </div>
+  </div>
+</header>
+
+      <div class="outer">
+        <section id="main"><article id="post-asong" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2026/02/27/asong/" class="article-date">
+  <time class="dt-published" datetime="2026-02-26T21:02:28.272Z" itemprop="datePublished">2026-02-27</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <p>title: 学习<br>date: 2026-2-26</p>
+<p>学到知识点：<br>类似于base系列的 字节串分割编码技巧。<br>字符频率统计算法识别。<br>题解：<br>题目地址：攻防世界 (xctf.org.cn)</p>
+<p>ida进入，可以看到就几个函数，进去逐一分析功能：首先时接受用户的输入，再check一下flag的形式，接着读取girl文件来初始化v4，最后进行flag的加密。</p>
+<p>sub_400bf这个函数</p>
+<p>直接从girl函数开始分析，使用循环每次只读取一位字符，利用change_num函数转化为数字v2后，在相对a2偏移为4*v2处记录下该字符出现的次数，所以这是一个统计字符频率的函数，change_num将字符转化为数字下标。<br><img src="/image-10.png" alt="alt text"></p>
+<p>进入change_num函数：将输入的字符，转化为对应的下标，大小写不进行区分统一为10~35（转化出来的数字时对应字符在v4中的下标）。</p>
+<p><img src="/image-11.png" alt="alt text"><br>进入encode函数，这里for循环中的 a2 与前面计算字符频率时的 a2 代表的地址相同，所以for循环中的操作相当于对输入的 flag字符 ，将其 ASCII码 转化为字符在歌词中出现的 频率 。<br><img src="/image-12.png" alt="alt text"></p>
+<p>进入change_sit函数：里面根据一个dword_6020A0数组的，来交换v5数组上的数据，具体的逻辑就是：取dword_6020A0数组上面第i个值j，以此为下标，用v5[j]覆盖v5[i]，简而言之就是 替换 。<br><img src="/image-13.png" alt="alt text"></p>
+<p>进入split函数：对输入的v5进行一个切分，二进制下，当前位的第5位与后一位的高三位组成一个新的值，放入当前位。</p>
+<p><img src="/image-14.png" alt="alt text"><br>后面对其逐一逆向，首先逆向切分：<br>#分割bit串<br>for i in range(len(a)):<br>    print(‘{:0&gt;8}’.format(bin(a[i])[2:]),end&#x3D;””)<br>print()<br>#001 11101将切分出来的末三位，手动放到字节串前面<br>res&#x3D;’0011110110000101001111000110100000111100001111101111010101000011101001010011110110100101001100110010011100111110011101101111010100111100111101011000010101110110111101010110100000010011111101010010011000100110101001011000010100111101111101010000011110101001011101100001110100111100001011010000111101101000’<br>for i in range(0,len(res),8):<br>  print(hex(int(res[i:i+8],2)),end&#x3D;”,”)<br>一键获取完整项目代码<br>python<br>1<br>2<br>3<br>4<br>5<br>6<br>7<br>8<br>字频替换（交换位置change_sit加密，逆向的顺序先做后做无所谓）：<br>#字符频率表需要事先准备<br>mapp&#x3D;{‘ ‘: 71, “‘“: 40, ‘<em>‘: 245, ‘a’: 104, ‘c’: 15, ‘b’: 30, ‘e’: 169, ‘d’: 29, ‘g’: 38, ‘f’: 19, ‘i’: 60, ‘h’: 67, ‘k’: 20, ‘m’: 28, ‘l’: 39, ‘o’: 165, ‘n’: 118, ‘p’: 26, ‘s’: 51, ‘r’: 61, ‘u’: 45, ‘t’: 133, ‘w’: 34, ‘v’: 7, ‘y’: 62}<br>#that_girl词频统计<br>value&#x3D;[71, 40, 245, 104, 15, 30, 169, 29, 38, 19, 60, 67, 20, 28, 39, 165, 118, 26, 51, 61, 45, 133, 34, 7, 62]<br>key&#x3D;[‘ ‘, “‘“, ‘</em>‘, ‘a’, ‘c’, ‘b’, ‘e’, ‘d’, ‘g’, ‘f’, ‘i’, ‘h’, ‘k’, ‘m’, ‘l’, ‘o’, ‘n’, ‘p’, ‘s’, ‘r’, ‘u’, ‘t’, ‘w’, ‘v’, ‘y’]<br>#查字频表<br>res_1&#x3D;[0x3d,0x85,0x3c,0x68,0x3c,0x3e,0xf5,0x43,0xa5,0x3d,<br>0xa5,0x33,0x27,0x3e,0x76,0xf5,0x3c,0xf5,0x85,0x76,0xf5,<br>0x68,0x13,0xf5,0x26,0x26,0xa5,0x85,0x3d,0xf5,0x7,0xa9,0x76,<br>0x1d,0x3c,0x2d,0xf,0x68]<br>for i in range(len(res_1)):<br>  print(ord(key[value.index(res_1[i])]),end&#x3D;”,”)</p>
+<p>一键获取完整项目代码<br>python</p>
+<p>1<br>2<br>3<br>4<br>5<br>6<br>7<br>8<br>9<br>10<br>11<br>12<br>13<br>位置交换逆向：<br>#改变顺序的解<br>s&#x3D;[22,   0,   6,   2,  30,<br>   24,   9,   1,  21,   7,<br>   18,  10,   8,  12,  17,<br>   23,  13,   4,   3,  14,<br>   19,  11,  20,  16,  15,<br>    5,  25,  36,  27,  28,<br>   29,  37,  31,   33, 32,<br>   26,  34,  35]</p>
+<p>i &#x3D; 1	#最后一个被覆盖的位置是第 s.index[0]&#x3D;1，这里i取多少都无所谓，判断条件一起更改即可<br>temp &#x3D; flag[i] #保存一下覆盖的值<br>while s.index(i) !&#x3D; 1:<br>    flag[i] &#x3D; flag[s.index(i)]<br>    i &#x3D; s.index(i)		#用当前i的下标值更新i<br>flag[i]&#x3D;temp<br>print(flag)<br>for i in range(len(flag)):<br>  print(chr(flag[i]),end&#x3D;””)<br>#that_girl_saying_no_fo@_your_vinidcate<br>一键获取完整项目代码<br>python</p>
+<p>————————————————<br>版权声明：本文为CSDN博主「波克比QWQ」的原创文章，遵循CC 4.0 BY-SA版权协议，转载请附上原文出处链接及本声明。<br>原文链接：<a target="_blank" rel="noopener" href="https://blog.csdn.net/yjh_fnu_ltn/article/details/139127760">https://blog.csdn.net/yjh_fnu_ltn/article/details/139127760</a></p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://example.com/2026/02/27/asong/" data-id="cuidyi5G69tsyAaqC9ols74EI" data-title="" class="article-share-link"><span class="fa fa-share">Share</span></a>
+      
+      
+      
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+  
+    <a href="/2026/02/27/first/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title"></div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+
+  
+    
+
+  
+    
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2026/02/">February 2026</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Recent Posts</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2026/02/27/asong/">(no title)</a>
+          </li>
+        
+          <li>
+            <a href="/2026/02/27/first/">(no title)</a>
+          </li>
+        
+          <li>
+            <a href="/2026/02/27/easy_go/">(no title)</a>
+          </li>
+        
+          <li>
+            <a href="/2026/02/27/%E6%A2%85%E6%B4%A5%E7%BE%8E%E6%B2%BB%E9%83%8E/">(no title)</a>
+          </li>
+        
+          <li>
+            <a href="/2026/02/27/%E9%87%91%E7%9B%BE%E6%9D%AF%E5%AF%86%E7%A0%81%E9%A2%98%E5%A4%8D%E7%8E%B0/">(no title)</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      
+      &copy; 2026 John Doe<br>
+      Powered by <a href="https://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+
+<script src="/js/jquery-3.6.4.min.js"></script>
+
+
+
+  
+<script src="/fancybox/jquery.fancybox.min.js"></script>
+
+
+
+
+<script src="/js/script.js"></script>
+
+
+
+
+
+  </div>
+</body>
+</html>

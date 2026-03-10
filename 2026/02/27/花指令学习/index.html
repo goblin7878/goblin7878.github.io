@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  
+  <title>Hexo</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="description" content="title: rust逆向解析题目复现rzipdate: 2026-1-31 前言本博客是参考了诸多大佬的文章而成的，博主本人也是菜鸟，可以看作是博主的学习笔记，因此我也会尽量写的详细，希望可以对你（萌新）有所帮助。路过大佬给个大腿抱抱&#x2F;(ㄒoㄒ)&#x2F;~~ 简介花指令又名垃圾代码、脏字节，英文名是junk code。花指令就是在不影响程序运行的情况下，往真实代码中插入一些垃圾代码">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Hexo">
+<meta property="og:url" content="http://example.com/2026/02/27/%E8%8A%B1%E6%8C%87%E4%BB%A4%E5%AD%A6%E4%B9%A0/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="title: rust逆向解析题目复现rzipdate: 2026-1-31 前言本博客是参考了诸多大佬的文章而成的，博主本人也是菜鸟，可以看作是博主的学习笔记，因此我也会尽量写的详细，希望可以对你（萌新）有所帮助。路过大佬给个大腿抱抱&#x2F;(ㄒoㄒ)&#x2F;~~ 简介花指令又名垃圾代码、脏字节，英文名是junk code。花指令就是在不影响程序运行的情况下，往真实代码中插入一些垃圾代码">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2026-02-26T18:22:33.726Z">
+<meta property="article:modified_time" content="2026-03-10T11:26:45.009Z">
+<meta property="article:author" content="John Doe">
+<meta name="twitter:card" content="summary">
+  
+    <link rel="alternate" href="/atom.xml" title="Hexo" type="application/atom+xml">
+  
+  
+    <link rel="shortcut icon" href="/favicon.png">
+  
+  
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  
+    
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.min.css">
+
+  
+  
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/fork-awesome@1.2.0/css/fork-awesome.min.css">
+
+<meta name="generator" content="Hexo 8.1.1"></head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">Hexo</a>
+      </h1>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"><span class="fa fa-bars"></span></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+        
+          <a class="nav-icon" href="/atom.xml" title="RSS Feed"><span class="fa fa-rss"></span></a>
+        
+        <a class="nav-icon nav-search-btn" title="Search"><span class="fa fa-search"></span></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://example.com"></form>
+      </div>
+    </div>
+  </div>
+</header>
+
+      <div class="outer">
+        <section id="main"><article id="post-花指令学习" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2026/02/27/%E8%8A%B1%E6%8C%87%E4%BB%A4%E5%AD%A6%E4%B9%A0/" class="article-date">
+  <time class="dt-published" datetime="2026-02-26T18:22:33.726Z" itemprop="datePublished">2026-02-27</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <p>title: rust逆向解析题目复现rzip<br>date: 2026-1-31</p>
+<p>前言<br>本博客是参考了诸多大佬的文章而成的，博主本人也是菜鸟，可以看作是博主的学习笔记，因此我也会尽量写的详细，希望可以对你（萌新）有所帮助。路过大佬给个大腿抱抱&#x2F;(ㄒoㄒ)&#x2F;~~</p>
+<p>简介<br>花指令又名垃圾代码、脏字节，英文名是junk code。花指令就是在不影响程序运行的情况下，往真实代码中插入一些垃圾代码，从而影响反汇编器的正常运行；或是起到干扰逆向分析人员的静态分析，增加分析难度和分析时间。</p>
+<p>有句话，花指令的目的是阻挠逆向人员的分析，并不是阻止。因此，我们在去除花指令的时候，要有耐心，因为这应该不会是什么难点，慢慢来一定可以解决的。</p>
+<p>简单花指令<br>花指令分为俩种：</p>
+<p>不可执行花指令<br>可执行花指令<br>可执行花指令<br>顾名思义，可以执行的花指令，这部分垃圾代码会在程序运行的时候执行，但是执行这些指令没有任何意义，并不会改变寄存器的值，同时反汇编器也可以正常的反汇编这些指令。目的是为了增加静态分析的难度，加大逆向分析人员的工作量。</p>
+<p>不可执行花指令<br>不可以执行的花指令，这类花指令会使反编译器在反编译的时候出错，反汇编器可能错误的反汇编这些指令。根据反汇编的工作原理，只有花指令同正常指令的前几个字节被反汇编器识别成一组无用字节时，才能破坏反汇编的结果。因此，插入的花指令应当是一些不完整的指令，被插入的不完整指令可以是随机选择的。<br>为了能够有效迷惑反汇编器，同时又确保代码的正确运行，花指令必须满足两个基本特征，即：</p>
+<p>垃圾数据必须是某个合法指令的一部分。<br>程序运行时，花指令必须位于实际不可执行的代码路径。<br>原理：反汇编算法的设计缺陷<br>反汇编算法主要可以分为俩类：递归下降算法和线性扫描算法。<br>1）线性扫描算法<br>线性扫描算法p1从程序的入口点开始反汇编，然后对整个代码段进行扫描，反汇编扫描过程中所遇到的每条指令。线性扫描算法的缺点在于在冯诺依曼体系结构下，无法区分数据与代码，从而导致将代码段中嵌入的数据误解释为指令的操作码，以致最后得到错误的反汇编结果。<br>2）递归下降算法<br>递归下降采取另外一种不同的方法来定位指令。递归下降算法强调控制流的概念。控制流根据一条指令是否被另一条指令引用来决定是否对其进行反汇编，遇到非控制转移指令时顺序进行反汇编，而遇到控制转移指令时则从转移地址处开始进行反汇编。通过构造必然条件或者互补条件，使得反汇编出错。</p>
+<p>关于花指令的构造<br>永恒跳转<br>最简单的jmp指令<br>jmp LABEL1<br>  db junk_code;<br>LABEL1:<br>运行项目并下载源码<br>c<br>运行<br>1<br>2<br>3<br>这种jmp单次跳转只能骗过线性扫描算法，会被IDA识别（递归下降）。</p>
+<p>多层跳转<br>__asm {<br>        jmp LABEL1;<br>        _emit 68h;<br>    LABEL1:<br>        jmp LABEL2;<br>        _emit 0CDh;<br>        _emit 20h;<br>    LABEL2:<br>        jmp LABEL3;<br>        _emit 0E8h;<br>    LABEL3:<br>    }<br>运行项目并下载源码<br>c<br>运行<br>和单次跳转一样，这种也会被IDA识别。<br>为了骗过IDA，我们将上面的花指令改写一下，</p>
+<pre><code>   __asm {
+        _emit 0xE8
+        _emit 0xFF
+        //_emit 立即数：代表在这个位置插入一个数据，这里插入的是0xe8
+    }
+</code></pre>
+<p>————————————————<br>学习于<a target="_blank" rel="noopener" href="https://blog.csdn.net/Sciurdae/article/details/133750478%EF%BC%8C%E8%BF%99%E4%BD%8D%E5%8D%9A%E5%AE%A2%E5%A4%A7%E7%A5%9E">https://blog.csdn.net/Sciurdae/article/details/133750478，这位博客大神</a></p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://example.com/2026/02/27/%E8%8A%B1%E6%8C%87%E4%BB%A4%E5%AD%A6%E4%B9%A0/" data-id="cuidqkIYP9veUvcNMchY_AKuE" data-title="" class="article-share-link"><span class="fa fa-share">Share</span></a>
+      
+      
+      
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2026/02/27/%E8%BF%B7%E5%AE%AB%E9%97%AE%E9%A2%98/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Newer</strong>
+      <div class="article-nav-title">
+        
+          (no title)
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2026/02/27/uni%E5%85%A5%E5%8F%A3%E5%8C%85%E8%A3%85%E9%A2%98/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title"></div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+
+  
+    
+
+  
+    
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2026/02/">February 2026</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Recent Posts</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2026/02/27/asong/">(no title)</a>
+          </li>
+        
+          <li>
+            <a href="/2026/02/27/first/">(no title)</a>
+          </li>
+        
+          <li>
+            <a href="/2026/02/27/easy_go/">(no title)</a>
+          </li>
+        
+          <li>
+            <a href="/2026/02/27/%E6%A2%85%E6%B4%A5%E7%BE%8E%E6%B2%BB%E9%83%8E/">(no title)</a>
+          </li>
+        
+          <li>
+            <a href="/2026/02/27/%E9%87%91%E7%9B%BE%E6%9D%AF%E5%AF%86%E7%A0%81%E9%A2%98%E5%A4%8D%E7%8E%B0/">(no title)</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      
+      &copy; 2026 John Doe<br>
+      Powered by <a href="https://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+
+<script src="/js/jquery-3.6.4.min.js"></script>
+
+
+
+  
+<script src="/fancybox/jquery.fancybox.min.js"></script>
+
+
+
+
+<script src="/js/script.js"></script>
+
+
+
+
+
+  </div>
+</body>
+</html>

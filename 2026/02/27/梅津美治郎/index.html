@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  
+  <title>Hexo</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="description" content="title: 学习date: 2026-2-11 攻防世界Reverse高手进阶区的3分题本篇是梅津美治郎的writeup 攻防世界的题目分数是动态的就仅以做题时的分数为准了 解题过程查壳显示无壳 扔进IDA int __cdecl main(int argc, const char **argv, const char **envp){  const CHAR *v3; &#x2F;&#x2F;">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Hexo">
+<meta property="og:url" content="http://example.com/2026/02/27/%E6%A2%85%E6%B4%A5%E7%BE%8E%E6%B2%BB%E9%83%8E/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="title: 学习date: 2026-2-11 攻防世界Reverse高手进阶区的3分题本篇是梅津美治郎的writeup 攻防世界的题目分数是动态的就仅以做题时的分数为准了 解题过程查壳显示无壳 扔进IDA int __cdecl main(int argc, const char **argv, const char **envp){  const CHAR *v3; &#x2F;&#x2F;">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2026-02-26T20:46:53.364Z">
+<meta property="article:modified_time" content="2026-03-10T11:29:03.867Z">
+<meta property="article:author" content="John Doe">
+<meta name="twitter:card" content="summary">
+  
+    <link rel="alternate" href="/atom.xml" title="Hexo" type="application/atom+xml">
+  
+  
+    <link rel="shortcut icon" href="/favicon.png">
+  
+  
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  
+    
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.min.css">
+
+  
+  
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/fork-awesome@1.2.0/css/fork-awesome.min.css">
+
+<meta name="generator" content="Hexo 8.1.1"></head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">Hexo</a>
+      </h1>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"><span class="fa fa-bars"></span></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+        
+          <a class="nav-icon" href="/atom.xml" title="RSS Feed"><span class="fa fa-rss"></span></a>
+        
+        <a class="nav-icon nav-search-btn" title="Search"><span class="fa fa-search"></span></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://example.com"></form>
+      </div>
+    </div>
+  </div>
+</header>
+
+      <div class="outer">
+        <section id="main"><article id="post-梅津美治郎" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2026/02/27/%E6%A2%85%E6%B4%A5%E7%BE%8E%E6%B2%BB%E9%83%8E/" class="article-date">
+  <time class="dt-published" datetime="2026-02-26T20:46:53.364Z" itemprop="datePublished">2026-02-27</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <p>title: 学习<br>date: 2026-2-11</p>
+<p>攻防世界Reverse高手进阶区的3分题<br>本篇是梅津美治郎的writeup</p>
+<p>攻防世界的题目分数是动态的<br>就仅以做题时的分数为准了</p>
+<p>解题过程<br>查壳显示无壳</p>
+<p>扔进IDA</p>
+<p>int __cdecl main(int argc, const char **argv, const char **envp)<br>{<br>  const CHAR *v3; &#x2F;&#x2F; ebx<br>  HMODULE v4; &#x2F;&#x2F; eax<br>  void (__stdcall *v5)(HMODULE, LPCSTR); &#x2F;&#x2F; eax<br>  char Str1[20]; &#x2F;&#x2F; [esp+1h] [ebp-157h] BYREF<br>  char Str2[11]; &#x2F;&#x2F; [esp+15h] [ebp-143h] BYREF<br>  int v9; &#x2F;&#x2F; [esp+20h] [ebp-138h] BYREF<br>  int v10[6]; &#x2F;&#x2F; [esp+26h] [ebp-132h] BYREF<br>  __int16 v11; &#x2F;&#x2F; [esp+3Eh] [ebp-11Ah]<br>  int v12[7]; &#x2F;&#x2F; [esp+40h] [ebp-118h] BYREF<br>  int v13[4]; &#x2F;&#x2F; [esp+5Ch] [ebp-FCh] BYREF<br>  int v14[2]; &#x2F;&#x2F; [esp+6Ch] [ebp-ECh] BYREF<br>  char v15; &#x2F;&#x2F; [esp+74h] [ebp-E4h]<br>  int v16[8]; &#x2F;&#x2F; [esp+75h] [ebp-E3h] BYREF<br>  __int16 v17; &#x2F;&#x2F; [esp+95h] [ebp-C3h]<br>  int v18[8]; &#x2F;&#x2F; [esp+97h] [ebp-C1h] BYREF<br>  char v19; &#x2F;&#x2F; [esp+B7h] [ebp-A1h]<br>  int v20; &#x2F;&#x2F; [esp+B8h] [ebp-A0h] BYREF<br>  int v21; &#x2F;&#x2F; [esp+BEh] [ebp-9Ah]<br>  int v22; &#x2F;&#x2F; [esp+C2h] [ebp-96h]<br>  int v23; &#x2F;&#x2F; [esp+C6h] [ebp-92h]<br>  int v24; &#x2F;&#x2F; [esp+CAh] [ebp-8Eh]<br>  int v25; &#x2F;&#x2F; [esp+CEh] [ebp-8Ah]<br>  int v26; &#x2F;&#x2F; [esp+D2h] [ebp-86h]<br>  int v27; &#x2F;&#x2F; [esp+D6h] [ebp-82h]<br>  int v28; &#x2F;&#x2F; [esp+DAh] [ebp-7Eh]<br>  char v29; &#x2F;&#x2F; [esp+DEh] [ebp-7Ah]<br>  int v30; &#x2F;&#x2F; [esp+DFh] [ebp-79h]<br>  int v31; &#x2F;&#x2F; [esp+E3h] [ebp-75h]<br>  int v32; &#x2F;&#x2F; [esp+E7h] [ebp-71h]<br>  int v33; &#x2F;&#x2F; [esp+EBh] [ebp-6Dh]<br>  int v34; &#x2F;&#x2F; [esp+EFh] [ebp-69h]<br>  int v35; &#x2F;&#x2F; [esp+F3h] [ebp-65h]<br>  int v36; &#x2F;&#x2F; [esp+F7h] [ebp-61h]<br>  int v37; &#x2F;&#x2F; [esp+FBh] [ebp-5Dh]<br>  __int16 v38; &#x2F;&#x2F; [esp+FFh] [ebp-59h]<br>  int v39; &#x2F;&#x2F; [esp+101h] [ebp-57h]<br>  int v40; &#x2F;&#x2F; [esp+105h] [ebp-53h]<br>  char v41; &#x2F;&#x2F; [esp+109h] [ebp-4Fh]<br>  int v42; &#x2F;&#x2F; [esp+10Ah] [ebp-4Eh]<br>  int v43; &#x2F;&#x2F; [esp+10Eh] [ebp-4Ah]<br>  int v44; &#x2F;&#x2F; [esp+112h] [ebp-46h]<br>  int v45; &#x2F;&#x2F; [esp+116h] [ebp-42h]<br>  int v46; &#x2F;&#x2F; [esp+11Ah] [ebp-3Eh]<br>  int v47; &#x2F;&#x2F; [esp+11Eh] [ebp-3Ah]<br>  int v48; &#x2F;&#x2F; [esp+122h] [ebp-36h]<br>  int v49; &#x2F;&#x2F; [esp+126h] [ebp-32h]<br>  int v50; &#x2F;&#x2F; [esp+12Ah] [ebp-2Eh]<br>  int v51; &#x2F;&#x2F; [esp+12Eh] [ebp-2Ah]<br>  int v52; &#x2F;&#x2F; [esp+132h] [ebp-26h]<br>  int v53; &#x2F;&#x2F; [esp+136h] [ebp-22h]<br>  int v54; &#x2F;&#x2F; [esp+13Ah] [ebp-1Eh]<br>  int v55; &#x2F;&#x2F; [esp+13Eh] [ebp-1Ah]<br>  int v56; &#x2F;&#x2F; [esp+142h] [ebp-16h]<br>  int v57; &#x2F;&#x2F; [esp+146h] [ebp-12h]<br>  int v58; &#x2F;&#x2F; [esp+14Ah] [ebp-Eh]<br>  __int16 v59; &#x2F;&#x2F; [esp+14Eh] [ebp-Ah]<br>  int *v60; &#x2F;&#x2F; [esp+150h] [ebp-8h]</p>
+<p>  v60 &#x3D; &argc;<br>  sub_402940();<br>  puts(<br>    “            .     \n”<br>    “           <em>|</em>    ROBOTIC AUTHENTICATION SYSTEM\n”<br>    “    &#x2F;\&#x2F;\  (. .)  &#x2F;\n”<br>    “    <code>||&#39;   |#|  \n&quot;     &quot;     ||__.-\&quot;-\&quot;-.___   \n&quot;     &quot;     </code>—| . . |–.\  \n”<br>    “         | : : |  ,||,\n”<br>    “         &#96;..-..’  \&#x2F;\&#x2F;\n”<br>    “          || ||   \n”<br>    “          || ||    \n”<br>    “         |<strong>|</strong>|  \n”);<br>  v20 &#x3D; 1337;<br>  v21 &#x3D; 1617194321;<br>  v22 &#x3D; 1679910002;<br>  v23 &#x3D; 1935963503;<br>  v24 &#x3D; 1684632865;<br>  v25 &#x3D; 1936221985;<br>  v26 &#x3D; 1361147250;<br>  v27 &#x3D; 1987211872;<br>  v28 &#x3D; 996504430;<br>  v29 &#x3D; 1;<br>  v18[0] &#x3D; 1617194321;<br>  v18[1] &#x3D; 1679910002;<br>  v18[2] &#x3D; 1935963503;<br>  v18[3] &#x3D; 1684632865;<br>  v18[4] &#x3D; 1936221985;<br>  v18[5] &#x3D; 1361147250;<br>  v18[6] &#x3D; 1987211872;<br>  v18[7] &#x3D; 996504430;<br>  v19 &#x3D; 1;<br>  v30 &#x3D; 1617194321;<br>  v31 &#x3D; 1679910002;<br>  v32 &#x3D; 1935963503;<br>  v33 &#x3D; 1684632865;<br>  v34 &#x3D; 1650749985;<br>  v35 &#x3D; 560295790;<br>  v36 &#x3D; 1920098385;<br>  v37 &#x3D; 1702063734;<br>  v38 &#x3D; 315;<br>  v16[0] &#x3D; 1617194321;<br>  v16[1] &#x3D; 1679910002;<br>  v16[2] &#x3D; 1935963503;<br>  v16[3] &#x3D; 1684632865;<br>  v16[4] &#x3D; 1650749985;<br>  v16[5] &#x3D; 560295790;<br>  v16[6] &#x3D; 1920098385;<br>  v16[7] &#x3D; 1702063734;<br>  v17 &#x3D; 315;<br>  v39 &#x3D; 1869557876;<br>  v40 &#x3D; 1718432615;<br>  v41 &#x3D; 3;<br>  v14[0] &#x3D; 1869557876;<br>  v14[1] &#x3D; 1718432615;<br>  v15 &#x3D; 3;<br>  v42 &#x3D; 1869833322;<br>  v43 &#x3D; 858942820;<br>  v44 &#x3D; 1835885871;<br>  v45 &#x3D; 20906241;<br>  v13[0] &#x3D; 1869833322;<br>  v13[1] &#x3D; 858942820;<br>  v13[2] &#x3D; 1835885871;<br>  v13[3] &#x3D; 20906241;<br>  v46 &#x3D; 1466262848;<br>  v47 &#x3D; 1853186660;<br>  v48 &#x3D; 1147495539;<br>  v49 &#x3D; 1902404217;<br>  v50 &#x3D; 1869506677;<br>  v51 &#x3D; 1701797961;<br>  v52 &#x3D; 24339565;<br>  v12[0] &#x3D; 1466262848;<br>  v12[1] &#x3D; 1853186660;<br>  v12[2] &#x3D; 1147495539;<br>  v12[3] &#x3D; 1902404217;<br>  v12[4] &#x3D; 1869506677;<br>  v12[5] &#x3D; 1701797961;<br>  v12[6] &#x3D; 24339565;<br>  v53 &#x3D; 561278552;<br>  v54 &#x3D; 795830390;<br>  v55 &#x3D; 1869496865;<br>  v56 &#x3D; 1969255270;<br>  v57 &#x3D; 1969253748;<br>  v58 &#x3D; 1919905384;<br>  v59 &#x3D; 288;<br>  v10[0] &#x3D; 561278552;<br>  v10[1] &#x3D; 795830390;<br>  v10[2] &#x3D; 1869496865;<br>  v10[3] &#x3D; 1969255270;<br>  v10[4] &#x3D; 1969253748;<br>  v10[5] &#x3D; 1919905384;<br>  v11 &#x3D; 288;<br>  v9 &#x3D; 1337;<br>  strcpy(Str2, “r0b0RUlez!”);<br>  dword_40AD94 &#x3D; (int)&v9;<br>  dword_40ADA0 &#x3D; (int)&v20;<br>  dword_40AD8C &#x3D; (char *)v18;<br>  dword_40AD90 &#x3D; (char *)v16;<br>  dword_40AD98 &#x3D; (int)v14;<br>  lpProcName &#x3D; (LPCSTR)v12;<br>  lpModuleName &#x3D; (LPCSTR)v13;<br>  Buffer &#x3D; (char *)v10;<br>  sub_401500(0);<br>  v3 &#x3D; lpProcName;<br>  v4 &#x3D; GetModuleHandleA(lpModuleName);<br>  v5 &#x3D; (void (__stdcall *)(HMODULE, LPCSTR))GetProcAddress(v4, v3);<br>  v5((HMODULE)1, (LPCSTR)sub_40157F);<br>  puts(dword_40AD8C);<br>  scanf(“%20s”, Str1);<br>  if ( !strcmp(Str1, Str2) )<br>  {<br>    puts(“You passed level1!”);<br>    sub_4015EA(0);<br>  }<br>  return 0;<br>}</p>
+<p>c</p>
+<p>1<br>可以看到</p>
+<p>一个简单的字符串比较，r0b0RUlez!应该是flag一部分</p>
+<p>然后，跟踪sub_4015EA：</p>
+<p>先是一个9次递归打印dword_40AD90数组</p>
+<p>再是一个__debugbreak函数，这会抛出int3断点异常，这里贴下查到的分析</p>
+<p>__debugbreak函数相当于一个int 3指令，引发一个中断，把执行权移交给调试器；如果没有调试器，那就移交给其他异常处理回调函数；如果都没有，那么程序就自己断下来。这里就是为了触发回调函数，如果没有调试器附加，那么debugbreak产生的异常会被AddVectoredExceptionHandler添加的回调函数捕获来处理</p>
+<p>回过头看main函数<br>有长串的变量和数字，其中v12和v13构成模块名和变量名</p>
+<p>而sub_401500函数通过递归，对字符串进行了操作，所以上面直接分析字符串分析不出来是什么</p>
+<p>动态调试出来v12和v13分别是kernel32.dll和AddVectoredExceptionHandler<br>那v5就是：捕抓异常然后给第一个处理函数sub_40157F处理<br>这就和上面的__debugbreak函数连上了</p>
+<p>跟踪sub_40157F函数</p>
+<p>发现是个异或2<br>但是这个字符串看不了</p>
+<p>扔进OD动态调试，发现int3直接patch了。。<br>就调用exit(0)，跑到了0x7开头的地址，飞了。。</p>
+<p>用IDA调试，下断点</p>
+<p>随意输入</p>
+<p>然后就看到</p>
+<p>这就可以写脚本了</p>
+<p>key&#x3D;”u1nnf2lg”<br>flag2&#x3D;””<br>for i in key1:<br>	flag2+&#x3D;chr(ord(i)^2)<br>print(flag2)<br>一键获取完整项目代码<br>python<br>1<br>2<br>3<br>4<br>5<br>得到w3lld0ne<br>————————————————<br>版权声明：本文为CSDN博主「思源湖的鱼」的原创文章，遵循CC 4.0 BY-SA版权协议，转载请附上原文出处链接及本声明。<br>原文链接：<a target="_blank" rel="noopener" href="https://blog.csdn.net/weixin_44604541/article/details/125229496">https://blog.csdn.net/weixin_44604541/article/details/125229496</a></p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://example.com/2026/02/27/%E6%A2%85%E6%B4%A5%E7%BE%8E%E6%B2%BB%E9%83%8E/" data-id="cuidQH026twcopgnTXGTwsKGq" data-title="" class="article-share-link"><span class="fa fa-share">Share</span></a>
+      
+      
+      
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2026/02/27/easy_go/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Newer</strong>
+      <div class="article-nav-title">
+        
+          (no title)
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2026/02/27/%E9%87%91%E7%9B%BE%E6%9D%AF%E5%AF%86%E7%A0%81%E9%A2%98%E5%A4%8D%E7%8E%B0/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title"></div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+
+  
+    
+
+  
+    
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2026/02/">February 2026</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Recent Posts</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2026/02/27/asong/">(no title)</a>
+          </li>
+        
+          <li>
+            <a href="/2026/02/27/first/">(no title)</a>
+          </li>
+        
+          <li>
+            <a href="/2026/02/27/easy_go/">(no title)</a>
+          </li>
+        
+          <li>
+            <a href="/2026/02/27/%E6%A2%85%E6%B4%A5%E7%BE%8E%E6%B2%BB%E9%83%8E/">(no title)</a>
+          </li>
+        
+          <li>
+            <a href="/2026/02/27/%E9%87%91%E7%9B%BE%E6%9D%AF%E5%AF%86%E7%A0%81%E9%A2%98%E5%A4%8D%E7%8E%B0/">(no title)</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      
+      &copy; 2026 John Doe<br>
+      Powered by <a href="https://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+
+<script src="/js/jquery-3.6.4.min.js"></script>
+
+
+
+  
+<script src="/fancybox/jquery.fancybox.min.js"></script>
+
+
+
+
+<script src="/js/script.js"></script>
+
+
+
+
+
+  </div>
+</body>
+</html>

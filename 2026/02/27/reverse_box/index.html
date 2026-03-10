@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  
+  <title>Hexo</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="description" content="title: md5加密date: 2026-2-11攻防世界reverse_box学习心得学习到使用 gdb脚本 的调试，利用 脚本 自动调试程序并进行爆破。与平常写的题目不同main函数，也可以接受 参数，例如一下源程序。#include &lt;stdio.h&gt; #第一个参数是执行文件是命令行传入参数的个数，第二个是个参数再内存中的地址int main(int argc, char *">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Hexo">
+<meta property="og:url" content="http://example.com/2026/02/27/reverse_box/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="title: md5加密date: 2026-2-11攻防世界reverse_box学习心得学习到使用 gdb脚本 的调试，利用 脚本 自动调试程序并进行爆破。与平常写的题目不同main函数，也可以接受 参数，例如一下源程序。#include &lt;stdio.h&gt; #第一个参数是执行文件是命令行传入参数的个数，第二个是个参数再内存中的地址int main(int argc, char *">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2026-02-26T20:29:46.612Z">
+<meta property="article:modified_time" content="2026-03-10T11:29:54.646Z">
+<meta property="article:author" content="John Doe">
+<meta name="twitter:card" content="summary">
+  
+    <link rel="alternate" href="/atom.xml" title="Hexo" type="application/atom+xml">
+  
+  
+    <link rel="shortcut icon" href="/favicon.png">
+  
+  
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  
+    
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.min.css">
+
+  
+  
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/fork-awesome@1.2.0/css/fork-awesome.min.css">
+
+<meta name="generator" content="Hexo 8.1.1"></head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">Hexo</a>
+      </h1>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"><span class="fa fa-bars"></span></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+        
+          <a class="nav-icon" href="/atom.xml" title="RSS Feed"><span class="fa fa-rss"></span></a>
+        
+        <a class="nav-icon nav-search-btn" title="Search"><span class="fa fa-search"></span></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://example.com"></form>
+      </div>
+    </div>
+  </div>
+</header>
+
+      <div class="outer">
+        <section id="main"><article id="post-reverse_box" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2026/02/27/reverse_box/" class="article-date">
+  <time class="dt-published" datetime="2026-02-26T20:29:46.612Z" itemprop="datePublished">2026-02-27</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <p>title: md5加密<br>date: 2026-2-11<br>攻防世界reverse_box<br>学习心得<br>学习到使用 gdb脚本 的调试，利用 脚本 自动调试程序并进行爆破。<br>与平常写的题目不同main函数，也可以接受 参数，例如一下源程序。<br>#include &lt;stdio.h&gt;</p>
+<p>#第一个参数是执行文件是命令行传入参数的个数，第二个是个参数再内存中的地址<br>int main(int argc, char *argv[])<br>{<br>    printf(“hello:\n”);<br>    printf(“%d\n”, argc);#输出参数的个数<br>    printf(“%s\n”, argv[0]);#输出参数的内容<br>    printf(“%s”, argv[1]);<br>    return 0;<br>}<br>一键获取完整项目代码<br>c</p>
+<p>输出：</p>
+<p>题解<br>清楚这两点手进入题目：ida打开，进入main函数，这里可以看到main函数接受了两个参数，和我们前面的提到的相同，检查的传入的参数个数是否大于二。</p>
+<p>进入box函数生成了一个长度为256的v4盒子，然后用输入的flag对盒子进行查表输出其盒子中对应偏移的十六进制。这里原来是题目要求最终输出为下面这段数据：<br>95eeaf95ef94234999582f722f492f72b19a7aaf72e6e776b57aee722fe77ab5ad9aaeb156729676ae7a236d99b1df4a<br>这里思路就是得到v4这盒子，然后用应该输出的数据对盒子进行逆查找，用值查其再盒子中对应的下标，根据题目要求的flag格式 TWCTF{}, 即 95 ，在盒子中对应的下标即为 T 的ASCII码 84 。</p>
+<p>进入bos分析：利用随机生成的数(非0)的 低8位 作为种子来生成整个盒子。</p>
+<p>进入汇编来查看随机数的生成：and之后，取出eax(本身是32位)，只取用eax的低8位作为种子密钥来生成box，因此可以在调试的时候将eax的值设置为 0~255 继续爆破，然后根据偏移为 84 处的值是否为 95 来判定爆破的结果是否符合要求，或者，在输入部分正确的flag WTCTF 后在地址 0x080486C3观察输入的第一个值是否为 95。</p>
+<p>gdb调试脚本如下：</p>
+<p>set $i&#x3D;0<br>set $total&#x3D;256</p>
+<p>while($i&lt;$total)</p>
+<p>  b *0x80485b4<br>  b *0x8048707</p>
+<p>  run TWCTF</p>
+<p>  set $i&#x3D;$i+1<br>  set <em>(char</em>)($ebp-0xc)&#x3D;$i<br>  continue</p>
+<p>  if ($eax&#x3D;&#x3D;0x95)<br>    print $i<br>    x&#x2F;256xb $esp+0x1c<br>    set $i&#x3D;256</p>
+<p>  end<br>  stop<br>end<br>end</p>
+<p>一键获取完整项目代码<br>python</p>
+<p>脚本说明：</p>
+<p>#设置爆破的范围0~255<br>set $i&#x3D;0<br>set $total&#x3D;256</p>
+<p>while($i&lt;$total)<br>  #每次进入都需要打上断点，一次调试结束后gdb会清除掉断点<br>  #在地址0x080485B4处打上断点，后续为eax传递爆破的数字<br>  b *0x80485b4<br>  #在地址0x080485B4处打上断点，后续检查eax的值是否爆破正确<br>  b *0x8048707</p>
+<p>  #启动程序，并传入参数TWCTF<br>  run TWCTF</p>
+<p>  #计数器加一<br>  set $i&#x3D;$i+1</p>
+<p>  #将栈上的数据覆盖，用爆破的种子即覆盖原来随机生成的种子<br>  #这里也可以在0x080485B1处打断点，直接为eax赋值为i，是相同的效果<br>  set <em>(char</em>)($ebp-0xc)&#x3D;$i</p>
+<p>  #继续执行程序<br>  continue</p>
+<p>  #在0x8048707处检查eax的值是否正确，正确则直接输出盒子，不正确则继续执行脚本，调试程序<br>  if ($eax&#x3D;&#x3D;0x95)<br>    #打印爆破出来的种子<br>    print $i<br>    #答应盒子，共256个字节，地址从esp+0x1c处开始<br>    x&#x2F;256xb $esp+0x1c<br>    #退出if语句后达到循环条件，直接退出<br>    set $i&#x3D;256<br>    #if语句结束<br>    end<br>  #结束一次调试<br>  stop<br>end<br>end</p>
+<p>一键获取完整项目代码<br>python</p>
+<p>脚本执行：将上面代码放入source.sh文件，进入调试后直接使用命令 source source.sh 即可执行脚本自动调试程序。</p>
+<p>拿到盒子后输出flag：</p>
+<p>table&#x3D;[<br> 0xd6,   0xc9 ,   0xc2,    0xce,    0x47,    0xde,    0xda,    0x70,<br> 0x85,   0xb4 ,   0xd2,    0x9e,    0x4b,    0x62,    0x1e,    0xc3,<br> 0x7f,   0x37 ,   0x7c,    0xc8,    0x4f,    0xec,    0xf2,    0x45,<br> 0x18,   0x61 ,   0x17,    0x1a,    0x29,    0x11,    0xc7,    0x75,<br> 0x02,   0x48 ,   0x26,    0x93,    0x83,    0x8a,    0x42,    0x79,<br> 0x81,   0x10 ,   0x50,    0x44,    0xc4,    0x6d,    0x84,    0xa0,<br> 0xb1,   0x72 ,   0x96,    0x76,    0xad,    0x23,    0xb0,    0x2f,<br> 0xb2,   0xa7 ,   0x35,    0x57,    0x5e,    0x92,    0x07,    0xc0,<br> 0xbc,   0x36 ,   0x99,    0xaf,    0xae,    0xdb,    0xef,    0x15,<br> 0xe7,   0x8e ,   0x63,    0x06,    0x9c,    0x56,    0x9a,    0x31,<br> 0xe6,   0x64 ,   0xb5,    0x58,    0x95,    0x49,    0x04,    0xee,<br> 0xdf,   0x7e ,   0x0b,    0x8c,    0xff,    0xf9,    0xed,    0x7a,<br> 0x65,   0x5a ,   0x1f,    0x4e,    0xf6,    0xf8,    0x86,    0x30,<br> 0xf0,   0x4c ,   0xb7,    0xca,    0xe5,    0x89,    0x2a,    0x1d,<br> 0xe4,   0x16 ,   0xf5,    0x3a,    0x27,    0x28,    0x8d,    0x40,<br> 0x09,   0x03 ,   0x6f,    0x94,    0xa5,    0x4a,    0x46,    0x67,<br> 0x78,   0xb9 ,   0xa6,    0x59,    0xea,    0x22,    0xf1,    0xa2,<br> 0x71,   0x12 ,   0xcb,    0x88,    0xd1,    0xe8,    0xac,    0xc6,<br> 0xd5,   0x34 ,   0xfa,    0x69,    0x97,    0x9f,    0x25,    0x3d,<br> 0xf3,   0x5b ,   0x0d,    0xa1,    0x6b,    0xeb,    0xbe,    0x6e,<br> 0x55,   0x87 ,   0x8f,    0xbf,    0xfc,    0xb3,    0x91,    0xe9,<br> 0x77,   0x66 ,   0x19,    0xd7,    0x24,    0x20,    0x51,    0xcc,<br> 0x52,   0x7d ,   0x82,    0xd8,    0x38,    0x60,    0xfb,    0x1c,<br> 0xd9,   0xe3 ,   0x41,    0x5f,    0xd0,    0xcf,    0x1b,    0xbd,<br> 0x0f,   0xcd ,   0x90,    0x9b,    0xa9,    0x13,    0x01,    0x73,<br> 0x5d,   0x68 ,   0xc1,    0xaa,    0xfe,    0x08,    0x3e,    0x3f,<br> 0xc5,   0x8b ,   0x00,    0xd3,    0xfd,    0xb6,    0x43,    0xbb,<br> 0xd4,   0x80 ,   0xe2,    0x0c,    0x33,    0x74,    0xa8,    0x2b,<br> 0x54,   0x4d ,   0x2d,    0xa4,    0xdc,    0x6c,    0x3b,    0x21,<br> 0x2e,   0xab ,   0x32,    0x5c,    0x7b,    0xe0,    0x9d,    0x6a,<br> 0x39,   0x14 ,   0x3c,    0xb8,    0x0a,    0x53,    0xf7,    0xdd,<br> 0xf4,   0x2c ,   0x98,    0xba,    0x05,    0xe1,    0x0e,    0xa3]<br>res&#x3D;’95eeaf95ef94234999582f722f492f72b19a7aaf72e6e776b57aee722fe77ab5ad9aaeb156729676ae7a236d99b1df4a’<br>for i in range(0,len(res),2):<br>    tmp&#x3D;int(res[i:i+2],16)<br>    print(chr(table.index(tmp)),end&#x3D;””)<br>#TWCTF{5UBS717U710N_C1PH3R_W17H_R4ND0M123D_5-B0X}<br>一键获取完整项目代码<br>python<br>最后，按理来说，输入相同的flag，其输出的结果应该与上面相对应，但是实际上却是下面这种情况，咱也不知道是啥问题，可能年久失修，box也不正确了吧：</p>
+<p>————————————————<br>版权声明：本文为CSDN博主「波克比QWQ」的原创文章，遵循CC 4.0 BY-SA版权协议，转载请附上原文出处链接及本声明。<br>原文链接：<a target="_blank" rel="noopener" href="https://blog.csdn.net/yjh_fnu_ltn/article/details/138967062">https://blog.csdn.net/yjh_fnu_ltn/article/details/138967062</a></p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://example.com/2026/02/27/reverse_box/" data-id="cuidWC9GG05Y2OoSCRIX3_4qz" data-title="" class="article-share-link"><span class="fa fa-share">Share</span></a>
+      
+      
+      
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2026/02/27/%E9%87%91%E7%9B%BE%E6%9D%AF%E5%AF%86%E7%A0%81%E9%A2%98%E5%A4%8D%E7%8E%B0/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Newer</strong>
+      <div class="article-nav-title">
+        
+          (no title)
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2026/02/27/easy_Maze/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title"></div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+
+  
+    
+
+  
+    
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2026/02/">February 2026</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Recent Posts</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2026/02/27/asong/">(no title)</a>
+          </li>
+        
+          <li>
+            <a href="/2026/02/27/first/">(no title)</a>
+          </li>
+        
+          <li>
+            <a href="/2026/02/27/easy_go/">(no title)</a>
+          </li>
+        
+          <li>
+            <a href="/2026/02/27/%E6%A2%85%E6%B4%A5%E7%BE%8E%E6%B2%BB%E9%83%8E/">(no title)</a>
+          </li>
+        
+          <li>
+            <a href="/2026/02/27/%E9%87%91%E7%9B%BE%E6%9D%AF%E5%AF%86%E7%A0%81%E9%A2%98%E5%A4%8D%E7%8E%B0/">(no title)</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      
+      &copy; 2026 John Doe<br>
+      Powered by <a href="https://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+
+<script src="/js/jquery-3.6.4.min.js"></script>
+
+
+
+  
+<script src="/fancybox/jquery.fancybox.min.js"></script>
+
+
+
+
+<script src="/js/script.js"></script>
+
+
+
+
+
+  </div>
+</body>
+</html>

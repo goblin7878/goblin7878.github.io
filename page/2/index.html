@@ -1,0 +1,508 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  
+  <title>Hexo</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta property="og:type" content="website">
+<meta property="og:title" content="Hexo">
+<meta property="og:url" content="http://example.com/page/2/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:locale" content="en_US">
+<meta property="article:author" content="John Doe">
+<meta name="twitter:card" content="summary">
+  
+    <link rel="alternate" href="/atom.xml" title="Hexo" type="application/atom+xml">
+  
+  
+    <link rel="shortcut icon" href="/favicon.png">
+  
+  
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  
+    
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.min.css">
+
+  
+  
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/fork-awesome@1.2.0/css/fork-awesome.min.css">
+
+<meta name="generator" content="Hexo 8.1.1"></head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">Hexo</a>
+      </h1>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"><span class="fa fa-bars"></span></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+        
+          <a class="nav-icon" href="/atom.xml" title="RSS Feed"><span class="fa fa-rss"></span></a>
+        
+        <a class="nav-icon nav-search-btn" title="Search"><span class="fa fa-search"></span></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://example.com"></form>
+      </div>
+    </div>
+  </div>
+</header>
+
+      <div class="outer">
+        <section id="main">
+  
+    <article id="post-uni入口包装题" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2026/02/27/uni%E5%85%A5%E5%8F%A3%E5%8C%85%E8%A3%85%E9%A2%98/" class="article-date">
+  <time class="dt-published" datetime="2026-02-26T18:11:47.731Z" itemprop="datePublished">2026-02-27</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <p>title: 入口点包装题复现r-png<br>date: 2026-2-7</p>
+<p>这道题提示图片png格式，推测是根据所给的文件反推代码并最后得出图片<br>看main函数可知这段反编译代码展示了一个典型的入口点包装器（Entry Point Wrapper）模式，其中出现了三个变量<br>sub_16A40：这很可能是真正的逻辑入口（flag 检查逻辑通常在此）<br>sub_24760：检查是否为运行时初始化（Go runtime &#x2F; C runtime）<br>qword_59E78：查看交叉引用，可能是关键的全局状态或配置<br>我先看了24760，经过分析发现这段代码的关键作用是设置程序运行环境，最终调用用户编写的真实 main 函数。，而其中的v32 &#x3D; (*(int (__fastcall **)(__int64 (__fastcall **)()))(v41 + 40))(p_sub_16A40_1);<br>p_sub_16A40_1 &#x3D; 用户编写的 main 函数（即之前提到的 sub_16A40），由此可以知道这关键在于16a40<br>这是典型的 Rust 编写的文件加密工具，核心逻辑是 RC4 流密码 的变种。<br>关键识别特征</p>
+<ol>
+<li>算法：修改版 RC4<br>密钥调度（KSA）：标准 RC4 初始化（256 次循环，初始化 S-box）<br>伪随机生成（PRGA）：标准 RC4 流程，但每个生成的密钥流字节 +69（0x45） 后再与明文异或：<br>c<br>复制<br>buf_1[v13] ^&#x3D; (keystream_byte + 69);</li>
+<li>密钥约束<br>4 位纯数字（如 0123、9999）<br>程序会显式检查：”[!] key 必须是 4 位数字，比如 0123\n”</li>
+<li>文件操作流程<br>输入：程序从第二个参数读取文件内容（sub_22340）<br>输出：加密后写入新文件（sub_22690），提示 “[+] 加密完成: “，我们可以爆破密钥，而题目提示过我们这是图片png格式，于是我直接尝试png有关的密钥，我在这里写一个全部爆破的密钥</li>
+</ol>
+<p>#!&#x2F;usr&#x2F;bin&#x2F;env python3</p>
+<h1 id="coding-utf-8"><a href="#coding-utf-8" class="headerlink" title="-- coding: utf-8 --"></a>-<em>- coding: utf-8 -</em>-</h1><p>“””<br>RC4 修改版全密钥爆破脚本<br>专门针对 4 位数字密钥 (0000-9999)<br>“””</p>
+<p>import sys<br>import os</p>
+<p>def modified_rc4_crypt(key_bytes, data):<br>    “””<br>    修改版 RC4 解密&#x2F;加密（对称）<br>    特色：密钥流字节 +69 (0x45) 后再异或<br>    “””<br>    # 密钥调度算法 (KSA)<br>    S &#x3D; list(range(256))<br>    j &#x3D; 0<br>    key_len &#x3D; len(key_bytes)</p>
+<pre><code>for i in range(256):
+    j = (j + S[i] + key_bytes[i % key_len]) &amp; 0xFF
+    S[i], S[j] = S[j], S[i]
+
+# 伪随机生成算法 (PRGA) + 修改 (+69)
+i = 0
+j = 0
+out = bytearray()
+
+for byte in data:
+    i = (i + 1) &amp; 0xFF
+    j = (j + S[i]) &amp; 0xFF
+    S[i], S[j] = S[j], S[i]
+    k = S[(S[i] + S[j]) &amp; 0xFF]
+    # 关键：+69 (0x45)
+    keystream_byte = (k + 69) &amp; 0xFF
+    out.append(byte ^ keystream_byte)
+
+return bytes(out)
+</code></pre>
+<p>def brute_force_all_keys(cipher_path):<br>    “””<br>    暴力破解 0000-9999，同时检查：<br>    1. 是否包含 flag{ 字符串<br>    2. 是否为 PNG&#x2F;JPG&#x2F;ZIP 文件头<br>    “””<br>    if not os.path.exists(cipher_path):<br>        print(f”[!] 错误：文件不存在 -&gt; {cipher_path}”)<br>        return</p>
+<pre><code>with open(cipher_path, &#39;rb&#39;) as f:
+    cipher_data = f.read()
+
+print(f&quot;[*] 密文大小: {len(cipher_data)} bytes&quot;)
+print(f&quot;[*] 开始全密钥空间爆破 (0000-9999)...&quot;)
+print(&quot;-&quot; * 50)
+
+found_count = 0
+
+for num in range(10000):
+    key_str = f&quot;{num:04d}&quot;
+    key_bytes = key_str.encode()
+    
+    # 解密
+    plain = modified_rc4_crypt(key_bytes, cipher_data)
+    
+    # 检查 1：是否包含 flag{
+    if b&#39;flag{&#39; in plain:
+        idx = plain.find(b&#39;flag{&#39;)
+        flag_candidate = plain[idx:idx+50]  # 提取 flag 前后文
+        print(f&quot;\n[!!!] 找到 FLAG！密钥: {key_str}&quot;)
+        print(f&quot;      内容: {flag_candidate.decode(&#39;utf-8&#39;, errors=&#39;ignore&#39;)}&quot;)
+        
+        # 保存
+        out_name = f&quot;cracked_{key_str}_flag.txt&quot;
+        with open(out_name, &#39;wb&#39;) as f:
+            f.write(plain)
+        print(f&quot;      已保存完整内容到: {out_name}&quot;)
+        found_count += 1
+        continue  # 继续搜索其他可能的密钥
+    
+    # 检查 2：是否为常见文件头
+    header_checks = [
+        (b&#39;\x89PNG&#39;, &#39;png&#39;, &#39;PNG 图片&#39;),
+        (b&#39;\xFF\xD8\xFF&#39;, &#39;jpg&#39;, &#39;JPG 图片&#39;),
+        (b&#39;GIF8&#39;, &#39;gif&#39;, &#39;GIF 图片&#39;),
+        (b&#39;PK\x03\x04&#39;, &#39;zip&#39;, &#39;ZIP 压缩包&#39;),
+        (b&#39;7z\xBC\xAF&#39;, &#39;7z&#39;, &#39;7Z 压缩包&#39;),
+        (b&#39;Rar!&#39;, &#39;rar&#39;, &#39;RAR 压缩包&#39;),
+        (b&#39;%PDF&#39;, &#39;pdf&#39;, &#39;PDF 文档&#39;),
+        (b&#39;\x7fELF&#39;, &#39;elf&#39;, &#39;ELF 可执行文件&#39;),
+        (b&#39;MZ&#39;, &#39;exe&#39;, &#39;Windows 可执行文件&#39;),
+        (b&#39;flag{&#39;, &#39;txt&#39;, &#39;纯文本Flag&#39;)
+    ]
+    
+    for magic, ext, desc in header_checks:
+        if plain.startswith(magic):
+            print(f&quot;\n[+] 密钥 {key_str} -&gt; {desc}&quot;)
+            
+            # 尝试提取可打印字符串看是否有 flag
+            try:
+                text_part = plain[:500].decode(&#39;ascii&#39;, errors=&#39;ignore&#39;)
+                if &#39;flag&#39; in text_part.lower():
+                    print(f&quot;      发现 flag 关键字在文本中&quot;)
+            except:
+                pass
+            
+            out_name = f&quot;recovered_{key_str}.{ext}&quot;
+            with open(out_name, &#39;wb&#39;) as f:
+                f.write(plain)
+            print(f&quot;      已保存为: {out_name}&quot;)
+            found_count += 1
+            break
+    
+    # 进度显示（每 1000 个显示一次）
+    if num % 1000 == 999:
+        print(f&quot;    进度: {num+1}/10000 ({(num+1)/100:.0f}%)&quot;)
+
+print(&quot;-&quot; * 50)
+if found_count == 0:
+    print(&quot;[!] 未找到任何匹配的密钥或文件类型&quot;)
+    print(&quot;[*] 建议：检查原始密文是否正确，或尝试其他偏移量&quot;)
+else:
+    print(f&quot;[+] 共发现 {found_count} 个可疑结果，请检查生成的文件&quot;)
+</code></pre>
+<p>def single_decrypt(key_str, input_file, output_file):<br>    “””使用指定密钥解密单个文件”””<br>    if not os.path.exists(input_file):<br>        print(f”[!] 文件不存在: {input_file}”)<br>        return</p>
+<pre><code>with open(input_file, &#39;rb&#39;) as f:
+    cipher = f.read()
+
+key_bytes = key_str.encode()
+plain = modified_rc4_crypt(key_bytes, cipher)
+
+with open(output_file, &#39;wb&#39;) as f:
+    f.write(plain)
+
+print(f&quot;[+] 已使用密钥 {key_str} 解密 -&gt; {output_file}&quot;)
+print(f&quot;    文件头: {plain[:8].hex().upper()}&quot;)
+</code></pre>
+<p>if <strong>name</strong> &#x3D;&#x3D; “<strong>main</strong>“:<br>    if len(sys.argv) &lt; 2:<br>        print(“用法:”)<br>        print(f”  {sys.argv[0]} bruteforce &lt;加密文件&gt;     # 暴力破解所有 4 位数字密钥”)<br>        print(f”  {sys.argv[0]} decrypt &lt;密钥&gt; &lt;输入&gt; &lt;输出&gt;  # 使用指定密钥解密”)<br>        print(f”\n示例:”)<br>        print(f”  python {sys.argv[0]} bruteforce flagpngenc”)<br>        print(f”  python {sys.argv[0]} decrypt 0315 flagpngenc output.exe”)<br>        sys.exit(1)</p>
+<pre><code>mode = sys.argv[1]
+
+if mode == &quot;bruteforce&quot;:
+    if len(sys.argv) &lt; 3:
+        print(&quot;[!] 请指定加密文件路径&quot;)
+        sys.exit(1)
+    cipher_file = sys.argv[2]
+    brute_force_all_keys(cipher_file)
+
+elif mode == &quot;decrypt&quot;:
+    if len(sys.argv) &lt; 5:
+        print(&quot;[!] 用法: decrypt &lt;密钥&gt; &lt;输入&gt; &lt;输出&gt;&quot;)
+        sys.exit(1)
+    key = sys.argv[2]
+    input_f = sys.argv[3]
+    output_f = sys.argv[4]
+    single_decrypt(key, input_f, output_f)
+
+else:
+    print(f&quot;[!] 未知模式: {mode}&quot;)
+    这个脚本爆破多种密钥，不仅局限于png格式
+</code></pre>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://example.com/2026/02/27/uni%E5%85%A5%E5%8F%A3%E5%8C%85%E8%A3%85%E9%A2%98/" data-id="cuidmJoyZnIadD3ziBC0HbJzn" data-title="" class="article-share-link"><span class="fa fa-share">Share</span></a>
+      
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+
+  
+    <article id="post-zxc" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2026/02/26/zxc/" class="article-date">
+  <time class="dt-published" datetime="2026-02-26T07:40:19.342Z" itemprop="datePublished">2026-02-26</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <p>title: rust逆向解析题目复现rzip<br>date: 2026-2-7</p>
+<p>在main函数里面发现这是一道rust逆向题目，并且main函数里并没有关键信息，里面提到主要代码在compress，接下来查看compress::main<br>这段代码是一个 LZ77 压缩算法的 Rust 实现。让我为你详细解析其工作原理：<br>核心算法分析</p>
+<ol>
+<li><p>命令行参数<br>用法: compress <input> <output>（如 compress a.txt a.z）<br>需要 3 个参数（程序名 + 输入 + 输出）</p>
+</li>
+<li><p>压缩算法（LZ77 变种）<br>滑动窗口参数：<br>搜索缓冲区: 256 字节（0x100）<br>最大匹配长度: 14 字节（从代码中多层 if 判断可见，最大检查到 14）<br>最小匹配长度: 3 字节（小于 3 直接输出字面量）<br>&#x2F;&#x2F; 伪代码逻辑<br>for i in 0..input.len() {<br> &#x2F;&#x2F; 在 [i-256, i-1] 范围内查找最长匹配<br> let (len, dist) &#x3D; find_longest_match(i);</p>
+<p> if len &gt;&#x3D; 3 {<br> &#x2F;&#x2F; 编码为 2 字节引用<br> output((dist &gt;&gt; 4) | 0x80);        &#x2F;&#x2F; 第一字节：0x80 + 距离高4位<br> output((dist &lt;&lt; 4) | len);         &#x2F;&#x2F; 第二字节：距离低4位 + 长度<br> i +&#x3D; len;<br> } else {<br> &#x2F;&#x2F; 直接输出字面量（0x00-0x7F）<br> output(input[i]);<br> i +&#x3D; 1;<br> }</p>
+</li>
+<li><p>解压算法（逆向还原）<br>如果你需要解压该格式，解压逻辑如下：<br>Python<br>复制<br>def decompress(data):<br> output &#x3D; bytearray()<br> i &#x3D; 0</p>
+<p> while i &lt; len(data):<br> b &#x3D; data[i]<br><br> if b &lt; 0x80:  # 字面量<br>     output.append(b)<br>     i +&#x3D; 1<br> else:         # 反向引用<br>     if i + 1 &gt;&#x3D; len(data): break<br><br>     b2 &#x3D; data[i + 1]<br>     # distance: 高 4 位来自 b1 的低 4 位，低 4 位来自 b2 的高 4 位<br>     dist &#x3D; ((b &amp; 0x0F) &lt;&lt; 4) | (b2 &gt;&gt; 4)<br>     # length: b2 的低 4 位（实际值 3-14）<br>     length &#x3D; b2 &amp; 0x0F<br><br>     # 从输出缓冲区复制<br>     for j in range(length):<br>         output.append(output[-dist])<br><br>     i +&#x3D; 2<br> return bytes(output)</p>
+</li>
+<li><p>文件格式特征<br>无文件头：纯流式压缩，没有魔数或文件头<br>边界: distance 范围 1-256（或 0-255，取决于实现细节），length 范围 3-14<br>压缩率显示: 程序会打印 原始大小: X, 压缩后大小: Y, 压缩率: Z%<br>根据以上逻辑书写脚本就能对题所给的压缩包解压</p>
+</li>
+</ol>
+<p>#!&#x2F;usr&#x2F;bin&#x2F;env python3<br>import sys</p>
+<p>def decompress(input_file, output_file):<br>    with open(input_file, ‘rb’) as f:<br>        data &#x3D; f.read()</p>
+<pre><code>output = bytearray()
+i = 0
+
+while i &lt; len(data):
+    first_byte = data[i]
+    
+    # 判断是否为引用标记（最高位为1，即 0x80-0x8F）
+    if first_byte &lt; 0x80:
+        # 字面量：直接输出（0x00-0x7F）
+        output.append(first_byte)
+        i += 1
+    else:
+        # 引用标记：需要两个字节
+        if i + 1 &gt;= len(data):
+            print(f&quot;错误：文件截断，在位置 {i} 处缺少第二个字节&quot;)
+            break
+        
+        second_byte = data[i + 1]
+        
+        # 解码距离和长度
+        # 第一字节低4位是距离的高4位
+        # 第二字节高4位是距离的低4位
+        distance = ((first_byte &amp; 0x0F) &lt;&lt; 4) | (second_byte &gt;&gt; 4)
+        
+        # 第二字节低4位是长度（3-14）
+        length = second_byte &amp; 0x0F
+        
+        # 根据代码分析，最小匹配长度应该是3
+        # 但如果length小于3，可能是编码问题或者需要特殊处理
+        if length &lt; 3:
+            # 某些LZ77变体中，length=0,1,2可能有特殊含义，或者直接当作字面量
+            # 但根据你的反编译代码，小于3的匹配不会被编码为引用
+            print(f&quot;警告：在位置 {i} 发现异常长度 {length}，当作字面量处理&quot;)
+            output.append(first_byte)
+            i += 1
+            continue
+        
+        # 从输出缓冲区向前distance处复制length个字节
+        # distance的范围应该是 1-256（滑动窗口大小）
+        if distance == 0:
+            print(f&quot;错误：在位置 {i} 发现distance为0&quot;)
+            i += 2
+            continue
+        
+        # 复制匹配的数据
+        # 注意：distance=1表示重复最后一个字节（如&quot;AAAA&quot;编码为A + ref(1,3)）
+        for _ in range(length):
+            if len(output) &lt; distance:
+                # 防止缓冲区下溢，虽然正常情况下不该发生
+                output.append(0)
+            else:
+                output.append(output[-distance])
+        
+        i += 2
+
+with open(output_file, &#39;wb&#39;) as f:
+    f.write(output)
+
+print(f&quot;解压完成：{len(data)} 字节 -&gt; {len(output)} 字节&quot;)
+print(f&quot;压缩率：{(1 - len(data)/len(output))*100:.2f}%&quot; if len(output) &gt; 0 else &quot;N/A&quot;)
+</code></pre>
+<p>if <strong>name</strong> &#x3D;&#x3D; “<strong>main</strong>“:<br>    if len(sys.argv) !&#x3D; 3:<br>        print(“用法: python decompress.py &lt;输入文件.z&gt; &lt;输出文件&gt;”)<br>        sys.exit(1)</p>
+<pre><code>decompress(sys.argv[1], sys.argv[2])
+在这之后1会得到一个flag记事本，将字体缩小到最小就可得到flag
+</code></pre>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://example.com/2026/02/26/zxc/" data-id="cuid1vbDGcdN2Ke5BglCC9Q46" data-title="" class="article-share-link"><span class="fa fa-share">Share</span></a>
+      
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+
+  
+    <article id="post-hello-world" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2026/02/22/hello-world/" class="article-date">
+  <time class="dt-published" datetime="2026-02-22T09:25:27.610Z" itemprop="datePublished">2026-02-22</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="p-name article-title" href="/2026/02/22/hello-world/">Hello World</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <p>Welcome to <a target="_blank" rel="noopener" href="https://hexo.io/">Hexo</a>! This is your very first post. Check <a target="_blank" rel="noopener" href="https://hexo.io/docs/">documentation</a> for more info. If you get any problems when using Hexo, you can find the answer in <a target="_blank" rel="noopener" href="https://hexo.io/docs/troubleshooting.html">troubleshooting</a> or you can ask me on <a target="_blank" rel="noopener" href="https://github.com/hexojs/hexo/issues">GitHub</a>.</p>
+<h2 id="Quick-Start"><a href="#Quick-Start" class="headerlink" title="Quick Start"></a>Quick Start</h2><h3 id="Create-a-new-post"><a href="#Create-a-new-post" class="headerlink" title="Create a new post"></a>Create a new post</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo new <span class="string">&quot;My New Post&quot;</span></span><br></pre></td></tr></table></figure>
+
+<p>More info: <a target="_blank" rel="noopener" href="https://hexo.io/docs/writing.html">Writing</a></p>
+<h3 id="Run-server"><a href="#Run-server" class="headerlink" title="Run server"></a>Run server</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo server</span><br></pre></td></tr></table></figure>
+
+<p>More info: <a target="_blank" rel="noopener" href="https://hexo.io/docs/server.html">Server</a></p>
+<h3 id="Generate-static-files"><a href="#Generate-static-files" class="headerlink" title="Generate static files"></a>Generate static files</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo generate</span><br></pre></td></tr></table></figure>
+
+<p>More info: <a target="_blank" rel="noopener" href="https://hexo.io/docs/generating.html">Generating</a></p>
+<h3 id="Deploy-to-remote-sites"><a href="#Deploy-to-remote-sites" class="headerlink" title="Deploy to remote sites"></a>Deploy to remote sites</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo deploy</span><br></pre></td></tr></table></figure>
+
+<p>More info: <a target="_blank" rel="noopener" href="https://hexo.io/docs/one-command-deployment.html">Deployment</a></p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://example.com/2026/02/22/hello-world/" data-id="cuidmk3MOM7l9ghRnNC1TlUt-" data-title="Hello World" class="article-share-link"><span class="fa fa-share">Share</span></a>
+      
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+
+  
+
+
+  <nav id="page-nav">
+    
+    <a class="extend prev" rel="prev" href="/">&laquo; Prev</a><a class="page-number" href="/">1</a><span class="page-number current">2</span>
+  </nav>
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+
+  
+    
+
+  
+    
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2026/02/">February 2026</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Recent Posts</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2026/02/27/asong/">(no title)</a>
+          </li>
+        
+          <li>
+            <a href="/2026/02/27/first/">(no title)</a>
+          </li>
+        
+          <li>
+            <a href="/2026/02/27/easy_go/">(no title)</a>
+          </li>
+        
+          <li>
+            <a href="/2026/02/27/%E6%A2%85%E6%B4%A5%E7%BE%8E%E6%B2%BB%E9%83%8E/">(no title)</a>
+          </li>
+        
+          <li>
+            <a href="/2026/02/27/%E9%87%91%E7%9B%BE%E6%9D%AF%E5%AF%86%E7%A0%81%E9%A2%98%E5%A4%8D%E7%8E%B0/">(no title)</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      
+      &copy; 2026 John Doe<br>
+      Powered by <a href="https://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+
+<script src="/js/jquery-3.6.4.min.js"></script>
+
+
+
+  
+<script src="/fancybox/jquery.fancybox.min.js"></script>
+
+
+
+
+<script src="/js/script.js"></script>
+
+
+
+
+
+  </div>
+</body>
+</html>
