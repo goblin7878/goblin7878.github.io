@@ -71,6 +71,66 @@
       <div class="outer">
         <section id="main">
   
+    <article id="post-hook学习" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2026/03/10/hook%E5%AD%A6%E4%B9%A0/" class="article-date">
+  <time class="dt-published" datetime="2026-03-10T12:35:57.209Z" itemprop="datePublished">2026-03-10</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <p>title: hook学习<br>date: 2026-2-19</p>
+<p>因为在攻防世界刷题碰到hook题，但我不了解，于是在博客上进行搜索学习<br><a target="_blank" rel="noopener" href="https://blog.csdn.net/xf555er/article/details/126339992">https://blog.csdn.net/xf555er/article/details/126339992</a><br>从这位大佬的博客里学习</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://example.com/2026/03/10/hook%E5%AD%A6%E4%B9%A0/" data-id="cuidTHfK_y8i_IupPJ4deDMea" data-title="" class="article-share-link"><span class="fa fa-share">Share</span></a>
+      
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+
+  
+    <article id="post-easyhook" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2026/03/10/easyhook/" class="article-date">
+  <time class="dt-published" datetime="2026-03-10T12:19:18.357Z" itemprop="datePublished">2026-03-10</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <p>title: 攻防世界easyhook<br>date: 2026-2-19</p>
+<p>先用die查壳，发现无壳用ida打开，查看主函数，发现只要输入的长度为19，它就会把我们的输入保存在名为your_input的文件中，且判断逻辑的结果保存在NumberOfBytesWritten中。<br>我以为他是检验算法，但是因为sub_401240函数操作了Buffer和NumberOfBytesWritten，以为它是检验算法，但是点进去看了半天也看不出什么名堂。。。<br>然后试着运行一下程序，随便输入 1234567890123456789，打开程序创建并写入我们输入字符串的文件 Your_input，发现并不是我们的输入而是一堆乱码<br>然而在这个程序中，文件写入部分看上去并没有对我们的输入做任何操作<br><img src="/image-15.png" alt="alt text"><br>联想题目名称 EasyHOOK ，猜测一定是 sub_401220() 这个函数 HOOK 了其他函数，点击进入该函数：sub_401220<br>这个函数逻辑清晰地找到了库函数 WriteFile 的地址，向 byte_40C9BC 中载入了 JUMP 指令的字节码 E9，计算了 sub_401080 距离 WriteFile 的第五个字节的距离。至于为什么是 5 个字节，那是因为 JUMP Address(32 bit) 指令有五个字节。<br>准备工作做完，进入 sub_4010D0 函数，WriteProcessMemory 函数将这五个字节的指令写入 WriteFile 函数的开始处，HOOK成功。<br>进入 sub_401080 ，在 sub_401000 函数加密完 lpBuffer 后，sub_401140 又把 WriteFile 函数还原，继续写操作。<br><img src="/image-17.png" alt="alt text"><br>进入加密函数 sub_401000，之后就可以写脚本了<br>#include &lt;stdio.h&gt;<br>unsigned char res[] &#x3D; {<br>    0x61, 0x6A, 0x79, 0x67, 0x6B, 0x46, 0x6D, 0x2E,<br>    0x7F, 0x5F, 0x7E, 0x2D, 0x53, 0x56, 0x7B, 0x38,<br>    0x6D, 0x4C, 0x6E, 0x00};<br>char flag[19];<br>int main()<br>{<br>    for (int i &#x3D; 18; i &gt;&#x3D; 0; i–)<br>    {<br>        if (i &#x3D;&#x3D; 18)<br>            flag[i] &#x3D; res[i] ^ 0x13;<br>        else<br>        {<br>            if (i % 2){<br>                flag[i] &#x3D; (res[i] ^ i) + i;<br>            }else{<br>                flag[i+2] &#x3D; (res[i] ^ i);<br>            }<br>        }<br>    }<br>    for (int i &#x3D; 1; i &lt; 19; i++)<br>        printf(“%c”, flag[i]);<br>}</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://example.com/2026/03/10/easyhook/" data-id="cuidpuNum0T9jQ4iXz73N-yY3" data-title="" class="article-share-link"><span class="fa fa-share">Share</span></a>
+      
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+
+  
     <article id="post-asong" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
   <div class="article-meta">
     <a href="/2026/02/27/asong/" class="article-date">
@@ -463,120 +523,6 @@ return None, None
 
 
   
-    <article id="post-迷宫问题" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
-  <div class="article-meta">
-    <a href="/2026/02/27/%E8%BF%B7%E5%AE%AB%E9%97%AE%E9%A2%98/" class="article-date">
-  <time class="dt-published" datetime="2026-02-26T18:52:15.853Z" itemprop="datePublished">2026-02-27</time>
-</a>
-    
-  </div>
-  <div class="article-inner">
-    
-    
-    <div class="e-content article-entry" itemprop="articleBody">
-      
-        <p>title: 迷宫问题<br>date: 2026-1-31</p>
-<p>题目为攻防世界的reverse_re3、<br>main函数分析<br>main函数十分的简单，说明关键代码都在函数里了</p>
-<p>​</p>
-<p>sub_940是需要关键分析的函数，每次循环都会带回返回值赋值给v4，等于1或者-1时都将使循环停止</p>
-<p>sub_11B4函数分析<br>双击跟进sub_11B4函数，这个函数也是十分简洁，第5行和第7行的__readfsqword(0x28u)经常会出现，看了其他大佬的wp说是用了反调试，但讲原理的目前还没搜到。。先记下来吧，等以后有缘自会理解的</p>
-<p>第6行则是对dword_202AB0变量赋值了0，现在还不太清楚这个作用，先留个心眼</p>
-<p>​</p>
-<p>sub_940函数分析<br>双击跟进sub_940函数，这个就是关键函数了，这里的变量v5也是__readfsqword(0x28u)反调试用的</p>
-<p>v0<br>这边有个变量叫v0，在下面被多次引用，我们选中它后按X键去查看引用，发现进行了多次值的判断，分别是100，115，119，27，97</p>
-<p>对这类数字、编码之类的要提起一种敏感心理，这里显然是字符的ASCII码值，写个简单脚本或直接查看ASCII码表，分别对应的字符为：d，s，w，ESC（键盘最左上角那个键）和a，经常玩3D冒险&#x2F;FPS类游戏的人对这四个字母可谓十分敏感了，wsad与ESC，和上下左右、退出等操作挂钩</p>
-<p>仔细观察，如果按键是wsad中的一个，都会去调用另一个函数，唯有输入为ESC键时，会直接将【0xFFFFFFFFLL】这个十六进制数返回，这个数其实就是十进制的-1（计算器按一下就知道了），末尾的LL是长整型的标志。而返回-1和main函数中v4被该函数赋值为1时结束循环是相呼应的，说明ESC键被输入的话，整个程序直接停止，更有游戏的韵味了吧</p>
-<p>v2<br>v2的这个变量也被多次引用，它的作用是在各个分支里面接收来自4个函数（见下图）的返回值，最终来控制do…while循环是否停止，显然当这些函数被调用并返回1时会停止do…while循环</p>
-<p>v3&amp;v4<br>v3的作用一目了然，用来作为v4这个字符数组的索引，它的值变换很单一，初始值为0，每次do…while循环自增一次</p>
-<p>v4是个字符数组，我点了半天没找到它的值是什么，结果突然发现在12行有个scanf函数，顿时给我气笑了，所以v4是用来接收输入字符的</p>
-<p>这下感觉通透多了，输入的字符串用v4存放，通过v3索引按照输入顺序访问这些字符，结合代码中的分支判断，有效的只能是WSAD和ESC这五个按键的字符，很有操作游戏的意思吧</p>
-<p>dword_202AB0<br>注意到这里又出现了之前在sub_11B4函数分析时，被初始化为0的变量dword_202AB0，可以看出它也被用作一个计数功能，可能取值为0，1，2，因为当它为2时整个while循环最终停止，这样代码就会执行到49行的flag获取成功提示以及50行的返回值1（这里和main函数中，v4被该函数的返回值赋值为1时结束循环又呼应上了）</p>
-<p>sub_86C函数分析<br>sub_86C函数关键代码只在8~19行，就是通过一个两层for循环对两个变量（dword_202AB4和dword_202AB8）进行赋值，两层for循环分别循环15次，总计225次</p>
-<p>除了一个新数组和两个新变量之外，我们还注意到一个眼熟的变量dword_202AB0，它已经在三个函数中出现了，前两次分别是sub_11B4函数初始化为0，sub_940函数作为计数器控制循环结束，而在这里，它被用于索引的部分参数去访问dword_202020这个数组</p>
-<p>前面分析出，dword_202AB0可能取值为0，1，2，那么【225 * dword_202AB0 + 15 * i + j】这个索引表达式的大致范围也就明确了——以255的倍数为一个界限，把一维数组dword_202020划分成了3部分</p>
-<p>那就去看看dword_202020这个数组里到底放了什么东西！</p>
-<p>双击跟进后发现是这些内容，这里灰色的注释直接表明了这个数组大小是675，因为是反汇编，这里的元素内容看起来有些难受，但大致能明白是些什么东西，比如【5 dup(1)】是连着5个1，其它内容同理了，观察一番发现，dword_202020数组中只存在4种数字：0、1、3、4</p>
-<p>分析到这里，很多东西已经清晰了，如果到这里还没意识到这像个迷宫游戏的话，在赛场上也很难ctf了，接下来就带着迷宫的猜测，继续分析后续代码</p>
-<p>sub_E23函数分析<br>这个函数是当判断按键为d，即右移操作时会调用的函数</p>
-<p>这里的4个变量在前面都是出现过的，dword_202020是数组（也就是游戏的迷宫图），而另外三个变量dword_202AB0、dword_202AB4和dword_202AB8的用途确实有点难想到，不过我觉得就算不知道它们三的作用，对这题的ctf影响没有很大，我们观察这个函数的逻辑判断——当某某数组元素为1时，它会被赋值为3，且比它索引小1的元素（即）会被赋值为1，而如果你它为4，则函数直接终止（因为返回1了，sub_940函数中的v2接收到1的返回值，会终止do…while循环），由此结合迷宫游戏的逻辑做出猜测：1代表的是走过的地方，3代表的是当前所在的地方（初始时，数组元素为3的地方，就相当于起点！），而4代表的是终点，再结合题目描述的</p>
-<p>看来，只要提取出迷宫图，并按照1是走过的路线、3是起点、4是终点这个规则，把路线划出来就能得出线索</p>
-<p>另外几个按键触发的函数这里就不一一展示了，因为它们的逻辑基本是一模一样</p>
-<p>提取迷宫<br>抛开代码审计，我认为本题最难的部分就是迷宫提取这步了，因为按常规思维，再简单的迷宫应该也是进行上下左右四个方向的二维地图，通过二维数组来实现才对啊？</p>
-<p>但是这里的迷宫数组却是个一维数组，也就是说，它利用了一些运算技巧，用一维数组去实现了二维迷宫图，反正蒟蒻博主是没这个天赋能自己悟出来了，就算看了wp也是想了很久才明白，下面就按我的理解来讲讲</p>
-<p>①这个迷宫是分三部分的，数组总大小是675，在sub_940函数和sub_86C函数对dword_202AB0这个变量的运用可以说明这点。dword_202AB0取值可能是0，1，2，在sub_86C函数中以255的倍数为一个界限，把一维数组dword_202020划分成了3部分，也就是三个迷宫</p>
-<p>②dword_202AB8变量代表的是列号，dword_202AB4代表的是行号，按键wsad任意一个调用的函数中能分析出这点，以按键d调用的sub_E23函数为例子</p>
-<p>只有当列号不为14（即小于14时）才能进行d键（即右移）操作，否则就越界了，这也间接说明了每个小迷宫的列数是15（索引从0开始），同理可以从ws两个键调用的函数分析出每个小迷宫的行数也是15，即15<em>15</em>3（3个小迷宫） &#x3D; 675，这么巧合的数字，说明猜测是正确的！</p>
-<p>③快捷键【shift+e】把dword_202020数组的元素提取出来，这里要注意，一定要选择下图的【initialized C variable】才能获取正确的数组元素，其它要么是16进制的，要么是16进制转10进制的</p>
-<p>④写脚本把一维数组转换成二维数组，以便判断上下左右四个方向的移动路径</p>
-<p>这里直接把数组内容全部复制到记事本中，然后去头掐尾把数组定义格式给删除，只留数组元素，注意这里删完后把第一个元素和其它元素对齐一下，接下来，直接把每行的空格、数组、逗号看成一行字符串，写脚本输入进去，并用数组保存索引为0的字符（博主用的C++编写，可以直接忽略输入的空格，所以数字是第一个元素，索引为0），最后再输出一遍保存在数组中的数字元素，同时控制行列即可</p>
-<p>运行项目并下载源码</p>
-<p>提取脚本<br>#include<iostream><br>using namespace std;<br>int main(){<br>	string ins;<br>	string ous[675];<br>	for(int i &#x3D; 0; i &lt; 675; i++){<br>		cin &gt;&gt; ins;<br>		ous[i] &#x3D; ins[0];<br>	}<br>	int row &#x3D; 0, col &#x3D; 0;<br>	for(int i &#x3D; 0; i &lt; 675; i++){<br>		cout &lt;&lt; ous[i] &lt;&lt; “ “;<br>		col++;&#x2F;&#x2F;累计输出几列<br>		if(col &#x3D;&#x3D; 15){<br>			cout &lt;&lt; endl;<br>			col &#x3D; 0;<br>			row++;&#x2F;&#x2F;累计输出几行<br>		}<br>		if(row &#x3D;&#x3D; 15){<br>			cout &lt;&lt; endl;<br>			row &#x3D; 0;<br>		}<br>	}<br>}<br>运行项目并下载源码<br>cpp<br>运行</p>
-<p>迷宫<br>1 1 1 1 1 0 0 0 0 0 0 0 0 0 0<br>1 1 1 1 1 0 3 1 1 0 0 0 0 0 0<br>1 1 1 1 1 0 0 0 1 0 0 0 0 0 0<br>1 1 1 1 1 0 0 0 1 0 0 0 0 0 0<br>1 1 1 1 1 0 0 0 1 1 1 1 1 0 0<br>1 1 1 1 1 0 0 0 0 0 0 0 1 0 0<br>1 1 1 1 1 0 0 0 0 0 0 0 1 0 0<br>1 1 1 1 1 0 0 0 0 0 0 0 1 1 0<br>1 1 1 1 1 0 0 0 0 0 0 0 0 1 0<br>1 1 1 1 1 0 0 0 0 0 0 0 0 4 0<br>1 1 1 1 1 1 1 1 1 1 1 1 1 1 1<br>1 1 1 1 1 1 1 1 1 1 1 1 1 1 1<br>1 1 1 1 1 1 1 1 1 1 1 1 1 1 1<br>1 1 1 1 1 1 1 1 1 1 1 1 1 1 1<br>1 1 1 1 1 1 1 1 1 1 1 1 1 1 1</p>
-<p>1 1 0 0 0 0 0 0 0 0 0 0 0 0 0<br>1 1 0 3 1 1 1 1 1 0 0 0 0 0 0<br>1 1 0 1 1 0 0 0 1 0 0 0 0 0 0<br>1 1 0 0 0 0 0 0 1 0 0 0 0 0 0<br>1 1 0 1 1 0 0 0 1 1 1 1 1 0 0<br>1 1 0 1 1 0 0 0 0 0 0 0 1 0 0<br>1 1 0 1 1 0 0 0 0 0 0 0 1 0 0<br>1 1 0 1 1 0 0 0 0 0 1 1 1 1 0<br>1 1 0 1 1 0 0 0 0 0 1 0 0 1 0<br>1 1 0 1 1 0 0 0 0 0 1 0 0 0 0<br>1 1 0 1 1 1 1 1 1 0 1 0 1 1 0<br>1 1 0 1 1 1 1 1 1 1 1 1 1 1 0<br>1 1 0 0 0 0 0 0 0 0 0 0 0 4 0<br>1 1 1 1 1 1 1 1 1 1 1 1 1 1 1<br>1 1 1 1 1 1 1 1 1 1 1 1 1 1 1</p>
-<p>0 0 0 0 0 0 0 0 0 0 0 0 0 0 0<br>0 3 1 1 0 0 0 0 0 0 0 0 0 0 0<br>0 0 0 1 0 1 1 1 0 0 0 0 0 0 0<br>0 0 0 1 1 1 0 1 0 0 0 0 0 0 0<br>0 0 0 0 1 0 0 1 0 0 0 0 0 0 0<br>0 1 1 0 1 0 0 1 0 0 0 0 0 0 0<br>0 0 1 1 1 0 0 1 0 0 0 0 0 0 0<br>0 0 0 0 0 0 0 1 0 0 0 0 0 0 0<br>0 0 0 0 0 0 0 1 1 1 1 0 0 0 0<br>0 0 0 0 0 0 0 0 0 0 1 0 0 0 0<br>0 0 0 0 0 0 0 0 0 0 1 0 0 0 0<br>0 0 0 0 0 0 0 0 0 0 1 0 0 0 0<br>0 0 0 0 0 0 0 0 0 0 1 1 1 1 0<br>0 0 0 0 0 0 0 0 0 0 0 0 0 1 0<br>0 0 0 0 0 0 0 0 0 0 0 0 0 4 0<br>运行项目并下载源码<br>cpp<br>运行<br>提取路线<br>有了迷宫，剩下的步骤就很简单了，按照1是走过的路线、3是起点、4是终点的规则以及上下左右分别为wsad字符的规则，写出路线<br>然后汇总成一个总串：ddsssddddsssdssdddddsssddddsssaassssdddsddssddwddssssssdddssssdddss</p>
-<p>再按照sub_940函数的提示，对这个字符串使用md5加密，得到最终flag</p>
-<p>参考<a target="_blank" rel="noopener" href="https://blog.csdn.net/liKeQing1027520/article/details/136788592">https://blog.csdn.net/liKeQing1027520/article/details/136788592</a></p>
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://example.com/2026/02/27/%E8%BF%B7%E5%AE%AB%E9%97%AE%E9%A2%98/" data-id="cuidaYc91Tfg6cUBW5-qfnil3" data-title="" class="article-share-link"><span class="fa fa-share">Share</span></a>
-      
-      
-      
-    </footer>
-  </div>
-  
-</article>
-
-
-
-  
-    <article id="post-花指令学习" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
-  <div class="article-meta">
-    <a href="/2026/02/27/%E8%8A%B1%E6%8C%87%E4%BB%A4%E5%AD%A6%E4%B9%A0/" class="article-date">
-  <time class="dt-published" datetime="2026-02-26T18:22:33.726Z" itemprop="datePublished">2026-02-27</time>
-</a>
-    
-  </div>
-  <div class="article-inner">
-    
-    
-    <div class="e-content article-entry" itemprop="articleBody">
-      
-        <p>title: rust逆向解析题目复现rzip<br>date: 2026-1-31</p>
-<p>前言<br>本博客是参考了诸多大佬的文章而成的，博主本人也是菜鸟，可以看作是博主的学习笔记，因此我也会尽量写的详细，希望可以对你（萌新）有所帮助。路过大佬给个大腿抱抱&#x2F;(ㄒoㄒ)&#x2F;~~</p>
-<p>简介<br>花指令又名垃圾代码、脏字节，英文名是junk code。花指令就是在不影响程序运行的情况下，往真实代码中插入一些垃圾代码，从而影响反汇编器的正常运行；或是起到干扰逆向分析人员的静态分析，增加分析难度和分析时间。</p>
-<p>有句话，花指令的目的是阻挠逆向人员的分析，并不是阻止。因此，我们在去除花指令的时候，要有耐心，因为这应该不会是什么难点，慢慢来一定可以解决的。</p>
-<p>简单花指令<br>花指令分为俩种：</p>
-<p>不可执行花指令<br>可执行花指令<br>可执行花指令<br>顾名思义，可以执行的花指令，这部分垃圾代码会在程序运行的时候执行，但是执行这些指令没有任何意义，并不会改变寄存器的值，同时反汇编器也可以正常的反汇编这些指令。目的是为了增加静态分析的难度，加大逆向分析人员的工作量。</p>
-<p>不可执行花指令<br>不可以执行的花指令，这类花指令会使反编译器在反编译的时候出错，反汇编器可能错误的反汇编这些指令。根据反汇编的工作原理，只有花指令同正常指令的前几个字节被反汇编器识别成一组无用字节时，才能破坏反汇编的结果。因此，插入的花指令应当是一些不完整的指令，被插入的不完整指令可以是随机选择的。<br>为了能够有效迷惑反汇编器，同时又确保代码的正确运行，花指令必须满足两个基本特征，即：</p>
-<p>垃圾数据必须是某个合法指令的一部分。<br>程序运行时，花指令必须位于实际不可执行的代码路径。<br>原理：反汇编算法的设计缺陷<br>反汇编算法主要可以分为俩类：递归下降算法和线性扫描算法。<br>1）线性扫描算法<br>线性扫描算法p1从程序的入口点开始反汇编，然后对整个代码段进行扫描，反汇编扫描过程中所遇到的每条指令。线性扫描算法的缺点在于在冯诺依曼体系结构下，无法区分数据与代码，从而导致将代码段中嵌入的数据误解释为指令的操作码，以致最后得到错误的反汇编结果。<br>2）递归下降算法<br>递归下降采取另外一种不同的方法来定位指令。递归下降算法强调控制流的概念。控制流根据一条指令是否被另一条指令引用来决定是否对其进行反汇编，遇到非控制转移指令时顺序进行反汇编，而遇到控制转移指令时则从转移地址处开始进行反汇编。通过构造必然条件或者互补条件，使得反汇编出错。</p>
-<p>关于花指令的构造<br>永恒跳转<br>最简单的jmp指令<br>jmp LABEL1<br>  db junk_code;<br>LABEL1:<br>运行项目并下载源码<br>c<br>运行<br>1<br>2<br>3<br>这种jmp单次跳转只能骗过线性扫描算法，会被IDA识别（递归下降）。</p>
-<p>多层跳转<br>__asm {<br>        jmp LABEL1;<br>        _emit 68h;<br>    LABEL1:<br>        jmp LABEL2;<br>        _emit 0CDh;<br>        _emit 20h;<br>    LABEL2:<br>        jmp LABEL3;<br>        _emit 0E8h;<br>    LABEL3:<br>    }<br>运行项目并下载源码<br>c<br>运行<br>和单次跳转一样，这种也会被IDA识别。<br>为了骗过IDA，我们将上面的花指令改写一下，</p>
-<pre><code>   __asm {
-        _emit 0xE8
-        _emit 0xFF
-        //_emit 立即数：代表在这个位置插入一个数据，这里插入的是0xe8
-    }
-</code></pre>
-<p>————————————————<br>学习于<a target="_blank" rel="noopener" href="https://blog.csdn.net/Sciurdae/article/details/133750478%EF%BC%8C%E8%BF%99%E4%BD%8D%E5%8D%9A%E5%AE%A2%E5%A4%A7%E7%A5%9E">https://blog.csdn.net/Sciurdae/article/details/133750478，这位博客大神</a></p>
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://example.com/2026/02/27/%E8%8A%B1%E6%8C%87%E4%BB%A4%E5%AD%A6%E4%B9%A0/" data-id="cuid22trsV77BJ6awMwheaxF-" data-title="" class="article-share-link"><span class="fa fa-share">Share</span></a>
-      
-      
-      
-    </footer>
-  </div>
-  
-</article>
-
-
-
-  
 
 
   <nav id="page-nav">
@@ -600,7 +546,7 @@ return None, None
   <div class="widget-wrap">
     <h3 class="widget-title">Archives</h3>
     <div class="widget">
-      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2026/02/">February 2026</a></li></ul>
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2026/03/">March 2026</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2026/02/">February 2026</a></li></ul>
     </div>
   </div>
 
@@ -613,6 +559,14 @@ return None, None
       <ul>
         
           <li>
+            <a href="/2026/03/10/hook%E5%AD%A6%E4%B9%A0/">(no title)</a>
+          </li>
+        
+          <li>
+            <a href="/2026/03/10/easyhook/">(no title)</a>
+          </li>
+        
+          <li>
             <a href="/2026/02/27/asong/">(no title)</a>
           </li>
         
@@ -622,14 +576,6 @@ return None, None
         
           <li>
             <a href="/2026/02/27/easy_go/">(no title)</a>
-          </li>
-        
-          <li>
-            <a href="/2026/02/27/%E6%A2%85%E6%B4%A5%E7%BE%8E%E6%B2%BB%E9%83%8E/">(no title)</a>
-          </li>
-        
-          <li>
-            <a href="/2026/02/27/%E9%87%91%E7%9B%BE%E6%9D%AF%E5%AF%86%E7%A0%81%E9%A2%98%E5%A4%8D%E7%8E%B0/">(no title)</a>
           </li>
         
       </ul>

@@ -6,20 +6,20 @@
   
   <title>Hexo</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-  <meta name="description" content="title: 学习date: 2026-2-26 工具ida逆向去符号表脚本+gdb 思路展开ida没符号表（符号表：平常打开ida都有函数名称指示，那个是main函数，那个是打印函数，本题打开发现没有这些指示，所有函数都是sub开头的通用表示，所以用脚本还原这些函数名）IDA 7.0 如何使用 IDAGolangHelper插件配置好后，执行脚本还原函数名称，找到main函数。有个红色区域，猜测">
+  <meta name="description" content="title: 攻防世界easyhookdate: 2026-2-19 先用die查壳，发现无壳用ida打开，查看主函数，发现只要输入的长度为19，它就会把我们的输入保存在名为your_input的文件中，且判断逻辑的结果保存在NumberOfBytesWritten中。我以为他是检验算法，但是因为sub_401240函数操作了Buffer和NumberOfBytesWritten，以为它是检验算法">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Hexo">
-<meta property="og:url" content="http://example.com/2026/02/27/easy_go/index.html">
+<meta property="og:url" content="http://example.com/2026/03/10/easyhook/index.html">
 <meta property="og:site_name" content="Hexo">
-<meta property="og:description" content="title: 学习date: 2026-2-26 工具ida逆向去符号表脚本+gdb 思路展开ida没符号表（符号表：平常打开ida都有函数名称指示，那个是main函数，那个是打印函数，本题打开发现没有这些指示，所有函数都是sub开头的通用表示，所以用脚本还原这些函数名）IDA 7.0 如何使用 IDAGolangHelper插件配置好后，执行脚本还原函数名称，找到main函数。有个红色区域，猜测">
+<meta property="og:description" content="title: 攻防世界easyhookdate: 2026-2-19 先用die查壳，发现无壳用ida打开，查看主函数，发现只要输入的长度为19，它就会把我们的输入保存在名为your_input的文件中，且判断逻辑的结果保存在NumberOfBytesWritten中。我以为他是检验算法，但是因为sub_401240函数操作了Buffer和NumberOfBytesWritten，以为它是检验算法">
 <meta property="og:locale" content="en_US">
-<meta property="og:image" content="http://example.com/image-1.png">
-<meta property="og:image" content="http://example.com/image-2.png">
-<meta property="article:published_time" content="2026-02-26T20:50:30.416Z">
-<meta property="article:modified_time" content="2026-03-10T11:42:39.183Z">
+<meta property="og:image" content="http://example.com/image-15.png">
+<meta property="og:image" content="http://example.com/image-17.png">
+<meta property="article:published_time" content="2026-03-10T12:19:18.357Z">
+<meta property="article:modified_time" content="2026-03-10T12:35:35.611Z">
 <meta property="article:author" content="John Doe">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="http://example.com/image-1.png">
+<meta name="twitter:image" content="http://example.com/image-15.png">
   
     <link rel="alternate" href="/atom.xml" title="Hexo" type="application/atom+xml">
   
@@ -76,10 +76,10 @@
 </header>
 
       <div class="outer">
-        <section id="main"><article id="post-easy_go" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+        <section id="main"><article id="post-easyhook" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
   <div class="article-meta">
-    <a href="/2026/02/27/easy_go/" class="article-date">
-  <time class="dt-published" datetime="2026-02-26T20:50:30.416Z" itemprop="datePublished">2026-02-27</time>
+    <a href="/2026/03/10/easyhook/" class="article-date">
+  <time class="dt-published" datetime="2026-03-10T12:19:18.357Z" itemprop="datePublished">2026-03-10</time>
 </a>
     
   </div>
@@ -88,14 +88,13 @@
     
     <div class="e-content article-entry" itemprop="articleBody">
       
-        <p>title: 学习<br>date: 2026-2-26</p>
-<p>工具<br>ida逆向去符号表脚本+gdb</p>
-<p>思路展开<br>ida没符号表（符号表：平常打开ida都有函数名称指示，那个是main函数，那个是打印函数，本题打开发现没有这些指示，所有函数都是sub开头的通用表示，所以用脚本还原这些函数名）<br>IDA 7.0 如何使用 IDAGolangHelper插件<br>配置好后，执行脚本还原函数名称，找到main函数。<br><img src="/image-1.png" alt="alt text"><br>有个红色区域，猜测软件保护技术，所以采用动调，ida动调失败（有ida反调试，但ida改不了跳转，无奈放弃），所以采用gdb调试，在0x495318下断点调试，提示输入时，随便输入，flag就出来了。<br><img src="/image-2.png" alt="alt text"><br>flag{92094daf-33c9-431e-a85a-8bfbd5df98ad}<br>————————————————</p>
+        <p>title: 攻防世界easyhook<br>date: 2026-2-19</p>
+<p>先用die查壳，发现无壳用ida打开，查看主函数，发现只要输入的长度为19，它就会把我们的输入保存在名为your_input的文件中，且判断逻辑的结果保存在NumberOfBytesWritten中。<br>我以为他是检验算法，但是因为sub_401240函数操作了Buffer和NumberOfBytesWritten，以为它是检验算法，但是点进去看了半天也看不出什么名堂。。。<br>然后试着运行一下程序，随便输入 1234567890123456789，打开程序创建并写入我们输入字符串的文件 Your_input，发现并不是我们的输入而是一堆乱码<br>然而在这个程序中，文件写入部分看上去并没有对我们的输入做任何操作<br><img src="/image-15.png" alt="alt text"><br>联想题目名称 EasyHOOK ，猜测一定是 sub_401220() 这个函数 HOOK 了其他函数，点击进入该函数：sub_401220<br>这个函数逻辑清晰地找到了库函数 WriteFile 的地址，向 byte_40C9BC 中载入了 JUMP 指令的字节码 E9，计算了 sub_401080 距离 WriteFile 的第五个字节的距离。至于为什么是 5 个字节，那是因为 JUMP Address(32 bit) 指令有五个字节。<br>准备工作做完，进入 sub_4010D0 函数，WriteProcessMemory 函数将这五个字节的指令写入 WriteFile 函数的开始处，HOOK成功。<br>进入 sub_401080 ，在 sub_401000 函数加密完 lpBuffer 后，sub_401140 又把 WriteFile 函数还原，继续写操作。<br><img src="/image-17.png" alt="alt text"><br>进入加密函数 sub_401000，之后就可以写脚本了<br>#include &lt;stdio.h&gt;<br>unsigned char res[] &#x3D; {<br>    0x61, 0x6A, 0x79, 0x67, 0x6B, 0x46, 0x6D, 0x2E,<br>    0x7F, 0x5F, 0x7E, 0x2D, 0x53, 0x56, 0x7B, 0x38,<br>    0x6D, 0x4C, 0x6E, 0x00};<br>char flag[19];<br>int main()<br>{<br>    for (int i &#x3D; 18; i &gt;&#x3D; 0; i–)<br>    {<br>        if (i &#x3D;&#x3D; 18)<br>            flag[i] &#x3D; res[i] ^ 0x13;<br>        else<br>        {<br>            if (i % 2){<br>                flag[i] &#x3D; (res[i] ^ i) + i;<br>            }else{<br>                flag[i+2] &#x3D; (res[i] ^ i);<br>            }<br>        }<br>    }<br>    for (int i &#x3D; 1; i &lt; 19; i++)<br>        printf(“%c”, flag[i]);<br>}</p>
 
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2026/02/27/easy_go/" data-id="cuida9vKP3C0AQvNbarW55F1J" data-title="" class="article-share-link"><span class="fa fa-share">Share</span></a>
+      <a data-url="http://example.com/2026/03/10/easyhook/" data-id="cuidpuNum0T9jQ4iXz73N-yY3" data-title="" class="article-share-link"><span class="fa fa-share">Share</span></a>
       
       
       
@@ -105,7 +104,7 @@
     
 <nav id="article-nav">
   
-    <a href="/2026/02/27/first/" id="article-nav-newer" class="article-nav-link-wrap">
+    <a href="/2026/03/10/hook%E5%AD%A6%E4%B9%A0/" id="article-nav-newer" class="article-nav-link-wrap">
       <strong class="article-nav-caption">Newer</strong>
       <div class="article-nav-title">
         
@@ -115,7 +114,7 @@
     </a>
   
   
-    <a href="/2026/02/27/%E6%A2%85%E6%B4%A5%E7%BE%8E%E6%B2%BB%E9%83%8E/" id="article-nav-older" class="article-nav-link-wrap">
+    <a href="/2026/02/27/asong/" id="article-nav-older" class="article-nav-link-wrap">
       <strong class="article-nav-caption">Older</strong>
       <div class="article-nav-title"></div>
     </a>
