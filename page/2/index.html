@@ -71,6 +71,42 @@
       <div class="outer">
         <section id="main">
   
+    <article id="post-re4-unvm-me" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2026/02/27/re4-unvm-me/" class="article-date">
+  <time class="dt-published" datetime="2026-02-26T19:49:41.344Z" itemprop="datePublished">2026-02-27</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <p>title: md5加密<br>date: 2026-2-11</p>
+<p>反编译为out.py文件</p>
+<p>得到代码，意思是将传入的字符串分五个一组，md5加密，作为16进制转10进制（int函数），然后依次与md5s数组进行比较</p>
+<p>附代码：</p>
+<p>复制代码<br> 1     # uncompyle6 version 3.4.0<br> 2<br> 3     # Python bytecode 2.7 (62211)<br> 4<br> 5     # Decompiled from: Python 2.7.9 (default, Mar  1 2015, 12:57:24)<br> 6<br> 7     # [GCC 4.9.2]<br> 8<br> 9     # Embedded file name: unvm_me.py<br>10<br>11     # Compiled at: 2016-12-21 05:44:01<br>12<br>13     import md5<br>14<br>15     md5s &#x3D; [<br>16<br>17     174282896860968005525213562254350376167L, 137092044126081477479435678296496849608L, 126300127609096051658061491018211963916L, 314989972419727999226545215739316729360L, 256525866025901597224592941642385934114L, 115141138810151571209618282728408211053L, 8705973470942652577929336993839061582L, 256697681645515528548061291580728800189L, 39818552652170274340851144295913091599L, 65313561977812018046200997898904313350L, 230909080238053318105407334248228870753L, 196125799557195268866757688147870815374L, 74874145132345503095307276614727915885L]<br>18<br>19     print ‘Can you turn me back to python ? …’<br>20<br>21     flag &#x3D; raw_input(‘well as you wish.. what is the flag: ‘)<br>22<br>23     if len(flag) &gt; 69:<br>24<br>25         print ‘nice try’<br>26<br>27         exit()<br>28<br>29     if len(flag) % 5 !&#x3D; 0:<br>30<br>31         print ‘nice try’<br>32<br>33         exit()<br>34<br>35     for i in range(0, len(flag), 5):<br>36<br>37         s &#x3D; flag[i:i + 5]<br>38<br>39         if int(‘0x’ + md5.new(s).hexdigest(), 16) !&#x3D; md5s[(i &#x2F; 5)]:<br>40<br>41             print ‘nice try’<br>42<br>43             exit()<br>44<br>45     print ‘Congratz now you have the flag’<br>复制代码<br>把md5s转换为16进制（hex函数）</p>
+<p>拿到md5解密网站解密，有一个没有解出来，发现是少了一位</p>
+<p>查看原来的10进制数据发现其他的都是39位，未解出的是37位。猜想原来的md5首位应该是0，进制转换自动省略首位0（但是猜这里应该是原作者自己去掉0的），添加0解出密文。幸好都解出来了，如果没有要写五位数字+英文的爆破，那…太惨了吧不知道要爆到什么时候。</p>
+<p>得到flag输入验证正确</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://example.com/2026/02/27/re4-unvm-me/" data-id="cuidGtXBXcGjHzS21bC5Ge4lM" data-title="" class="article-share-link"><span class="fa fa-share">Share</span></a>
+      
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+
+  
     <article id="post-迷宫问题" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
   <div class="article-meta">
     <a href="/2026/02/27/%E8%BF%B7%E5%AE%AB%E9%97%AE%E9%A2%98/" class="article-date">
@@ -552,6 +588,10 @@ print(f&quot;压缩率：{(1 - len(data)/len(output))*100:.2f}%&quot; if len(out
       <ul>
         
           <li>
+            <a href="/2026/03/10/ReverseMe-120/">(no title)</a>
+          </li>
+        
+          <li>
             <a href="/2026/03/10/hook%E5%AD%A6%E4%B9%A0/">(no title)</a>
           </li>
         
@@ -565,10 +605,6 @@ print(f&quot;压缩率：{(1 - len(data)/len(output))*100:.2f}%&quot; if len(out
         
           <li>
             <a href="/2026/02/27/first/">(no title)</a>
-          </li>
-        
-          <li>
-            <a href="/2026/02/27/easy_go/">(no title)</a>
           </li>
         
       </ul>
