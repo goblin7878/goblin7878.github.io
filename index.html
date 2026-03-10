@@ -96,7 +96,7 @@
 <p>一键获取完整项目代码<br>python</p>
 <p>1<br>2<br>3<br>4<br>5<br>6<br>7<br>8<br>9<br>10<br>11<br>12<br>13<br>位置交换逆向：<br>#改变顺序的解<br>s&#x3D;[22,   0,   6,   2,  30,<br>   24,   9,   1,  21,   7,<br>   18,  10,   8,  12,  17,<br>   23,  13,   4,   3,  14,<br>   19,  11,  20,  16,  15,<br>    5,  25,  36,  27,  28,<br>   29,  37,  31,   33, 32,<br>   26,  34,  35]</p>
 <p>i &#x3D; 1	#最后一个被覆盖的位置是第 s.index[0]&#x3D;1，这里i取多少都无所谓，判断条件一起更改即可<br>temp &#x3D; flag[i] #保存一下覆盖的值<br>while s.index(i) !&#x3D; 1:<br>    flag[i] &#x3D; flag[s.index(i)]<br>    i &#x3D; s.index(i)		#用当前i的下标值更新i<br>flag[i]&#x3D;temp<br>print(flag)<br>for i in range(len(flag)):<br>  print(chr(flag[i]),end&#x3D;””)<br>#that_girl_saying_no_fo@_your_vinidcate<br>一键获取完整项目代码<br>python</p>
-<p>————————————————<br>版权声明：本文为CSDN博主「波克比QWQ」的原创文章，遵循CC 4.0 BY-SA版权协议，转载请附上原文出处链接及本声明。<br>原文链接：<a target="_blank" rel="noopener" href="https://blog.csdn.net/yjh_fnu_ltn/article/details/139127760">https://blog.csdn.net/yjh_fnu_ltn/article/details/139127760</a></p>
+<p>————————————————<br>参考<a target="_blank" rel="noopener" href="https://blog.csdn.net/yjh_fnu_ltn/article/details/139127760">https://blog.csdn.net/yjh_fnu_ltn/article/details/139127760</a></p>
 
       
     </div>
@@ -175,7 +175,7 @@
         <p>title: 学习<br>date: 2026-2-26</p>
 <p>工具<br>ida逆向去符号表脚本+gdb</p>
 <p>思路展开<br>ida没符号表（符号表：平常打开ida都有函数名称指示，那个是main函数，那个是打印函数，本题打开发现没有这些指示，所有函数都是sub开头的通用表示，所以用脚本还原这些函数名）<br>IDA 7.0 如何使用 IDAGolangHelper插件<br>配置好后，执行脚本还原函数名称，找到main函数。<br><img src="/image-1.png" alt="alt text"><br>有个红色区域，猜测软件保护技术，所以采用动调，ida动调失败（有ida反调试，但ida改不了跳转，无奈放弃），所以采用gdb调试，在0x495318下断点调试，提示输入时，随便输入，flag就出来了。<br><img src="/image-2.png" alt="alt text"><br>flag{92094daf-33c9-431e-a85a-8bfbd5df98ad}<br>————————————————</p>
-<p>原文链接：<a target="_blank" rel="noopener" href="https://blog.csdn.net/weixin_45055269/article/details/106181087">https://blog.csdn.net/weixin_45055269/article/details/106181087</a></p>
+<p>参考<a target="_blank" rel="noopener" href="https://blog.csdn.net/weixin_45055269/article/details/106181087">https://blog.csdn.net/weixin_45055269/article/details/106181087</a></p>
 
       
     </div>
@@ -228,7 +228,8 @@
 <p>随意输入</p>
 <p>然后就看到</p>
 <p>这就可以写脚本了</p>
-<p>key&#x3D;”u1nnf2lg”<br>flag2&#x3D;””<br>for i in key1:<br>	flag2+&#x3D;chr(ord(i)^2)<br>print(flag2)<br>一键获取完整项目代码<br>python<br>1<br>2<br>3<br>4<br>5<br>得到w3lld0ne<br>————————————————<br>版权声明：本文为CSDN博主「思源湖的鱼」的原创文章，遵循CC 4.0 BY-SA版权协议，转载请附上原文出处链接及本声明。<br>原文链接：<a target="_blank" rel="noopener" href="https://blog.csdn.net/weixin_44604541/article/details/125229496">https://blog.csdn.net/weixin_44604541/article/details/125229496</a></p>
+<p>key&#x3D;”u1nnf2lg”<br>flag2&#x3D;””<br>for i in key1:<br>	flag2+&#x3D;chr(ord(i)^2)<br>print(flag2)<br>一键获取完整项目代码<br>python<br>1<br>2<br>3<br>4<br>5<br>得到w3lld0ne</p>
+<p>参考<a target="_blank" rel="noopener" href="https://blog.csdn.net/weixin_44604541/article/details/125229496">https://blog.csdn.net/weixin_44604541/article/details/125229496</a></p>
 
       
     </div>
@@ -371,7 +372,7 @@ return None, None
 <p>脚本执行：将上面代码放入source.sh文件，进入调试后直接使用命令 source source.sh 即可执行脚本自动调试程序。</p>
 <p>拿到盒子后输出flag：</p>
 <p>table&#x3D;[<br> 0xd6,   0xc9 ,   0xc2,    0xce,    0x47,    0xde,    0xda,    0x70,<br> 0x85,   0xb4 ,   0xd2,    0x9e,    0x4b,    0x62,    0x1e,    0xc3,<br> 0x7f,   0x37 ,   0x7c,    0xc8,    0x4f,    0xec,    0xf2,    0x45,<br> 0x18,   0x61 ,   0x17,    0x1a,    0x29,    0x11,    0xc7,    0x75,<br> 0x02,   0x48 ,   0x26,    0x93,    0x83,    0x8a,    0x42,    0x79,<br> 0x81,   0x10 ,   0x50,    0x44,    0xc4,    0x6d,    0x84,    0xa0,<br> 0xb1,   0x72 ,   0x96,    0x76,    0xad,    0x23,    0xb0,    0x2f,<br> 0xb2,   0xa7 ,   0x35,    0x57,    0x5e,    0x92,    0x07,    0xc0,<br> 0xbc,   0x36 ,   0x99,    0xaf,    0xae,    0xdb,    0xef,    0x15,<br> 0xe7,   0x8e ,   0x63,    0x06,    0x9c,    0x56,    0x9a,    0x31,<br> 0xe6,   0x64 ,   0xb5,    0x58,    0x95,    0x49,    0x04,    0xee,<br> 0xdf,   0x7e ,   0x0b,    0x8c,    0xff,    0xf9,    0xed,    0x7a,<br> 0x65,   0x5a ,   0x1f,    0x4e,    0xf6,    0xf8,    0x86,    0x30,<br> 0xf0,   0x4c ,   0xb7,    0xca,    0xe5,    0x89,    0x2a,    0x1d,<br> 0xe4,   0x16 ,   0xf5,    0x3a,    0x27,    0x28,    0x8d,    0x40,<br> 0x09,   0x03 ,   0x6f,    0x94,    0xa5,    0x4a,    0x46,    0x67,<br> 0x78,   0xb9 ,   0xa6,    0x59,    0xea,    0x22,    0xf1,    0xa2,<br> 0x71,   0x12 ,   0xcb,    0x88,    0xd1,    0xe8,    0xac,    0xc6,<br> 0xd5,   0x34 ,   0xfa,    0x69,    0x97,    0x9f,    0x25,    0x3d,<br> 0xf3,   0x5b ,   0x0d,    0xa1,    0x6b,    0xeb,    0xbe,    0x6e,<br> 0x55,   0x87 ,   0x8f,    0xbf,    0xfc,    0xb3,    0x91,    0xe9,<br> 0x77,   0x66 ,   0x19,    0xd7,    0x24,    0x20,    0x51,    0xcc,<br> 0x52,   0x7d ,   0x82,    0xd8,    0x38,    0x60,    0xfb,    0x1c,<br> 0xd9,   0xe3 ,   0x41,    0x5f,    0xd0,    0xcf,    0x1b,    0xbd,<br> 0x0f,   0xcd ,   0x90,    0x9b,    0xa9,    0x13,    0x01,    0x73,<br> 0x5d,   0x68 ,   0xc1,    0xaa,    0xfe,    0x08,    0x3e,    0x3f,<br> 0xc5,   0x8b ,   0x00,    0xd3,    0xfd,    0xb6,    0x43,    0xbb,<br> 0xd4,   0x80 ,   0xe2,    0x0c,    0x33,    0x74,    0xa8,    0x2b,<br> 0x54,   0x4d ,   0x2d,    0xa4,    0xdc,    0x6c,    0x3b,    0x21,<br> 0x2e,   0xab ,   0x32,    0x5c,    0x7b,    0xe0,    0x9d,    0x6a,<br> 0x39,   0x14 ,   0x3c,    0xb8,    0x0a,    0x53,    0xf7,    0xdd,<br> 0xf4,   0x2c ,   0x98,    0xba,    0x05,    0xe1,    0x0e,    0xa3]<br>res&#x3D;’95eeaf95ef94234999582f722f492f72b19a7aaf72e6e776b57aee722fe77ab5ad9aaeb156729676ae7a236d99b1df4a’<br>for i in range(0,len(res),2):<br>    tmp&#x3D;int(res[i:i+2],16)<br>    print(chr(table.index(tmp)),end&#x3D;””)<br>#TWCTF{5UBS717U710N_C1PH3R_W17H_R4ND0M123D_5-B0X}<br>一键获取完整项目代码<br>python<br>最后，按理来说，输入相同的flag，其输出的结果应该与上面相对应，但是实际上却是下面这种情况，咱也不知道是啥问题，可能年久失修，box也不正确了吧：</p>
-<p>————————————————<br>版权声明：本文为CSDN博主「波克比QWQ」的原创文章，遵循CC 4.0 BY-SA版权协议，转载请附上原文出处链接及本声明。<br>原文链接：<a target="_blank" rel="noopener" href="https://blog.csdn.net/yjh_fnu_ltn/article/details/138967062">https://blog.csdn.net/yjh_fnu_ltn/article/details/138967062</a></p>
+<p>参考<a target="_blank" rel="noopener" href="https://blog.csdn.net/yjh_fnu_ltn/article/details/138967062">https://blog.csdn.net/yjh_fnu_ltn/article/details/138967062</a></p>
 
       
     </div>
@@ -515,7 +516,7 @@ return None, None
 <p>1 1 0 0 0 0 0 0 0 0 0 0 0 0 0<br>1 1 0 3 1 1 1 1 1 0 0 0 0 0 0<br>1 1 0 1 1 0 0 0 1 0 0 0 0 0 0<br>1 1 0 0 0 0 0 0 1 0 0 0 0 0 0<br>1 1 0 1 1 0 0 0 1 1 1 1 1 0 0<br>1 1 0 1 1 0 0 0 0 0 0 0 1 0 0<br>1 1 0 1 1 0 0 0 0 0 0 0 1 0 0<br>1 1 0 1 1 0 0 0 0 0 1 1 1 1 0<br>1 1 0 1 1 0 0 0 0 0 1 0 0 1 0<br>1 1 0 1 1 0 0 0 0 0 1 0 0 0 0<br>1 1 0 1 1 1 1 1 1 0 1 0 1 1 0<br>1 1 0 1 1 1 1 1 1 1 1 1 1 1 0<br>1 1 0 0 0 0 0 0 0 0 0 0 0 4 0<br>1 1 1 1 1 1 1 1 1 1 1 1 1 1 1<br>1 1 1 1 1 1 1 1 1 1 1 1 1 1 1</p>
 <p>0 0 0 0 0 0 0 0 0 0 0 0 0 0 0<br>0 3 1 1 0 0 0 0 0 0 0 0 0 0 0<br>0 0 0 1 0 1 1 1 0 0 0 0 0 0 0<br>0 0 0 1 1 1 0 1 0 0 0 0 0 0 0<br>0 0 0 0 1 0 0 1 0 0 0 0 0 0 0<br>0 1 1 0 1 0 0 1 0 0 0 0 0 0 0<br>0 0 1 1 1 0 0 1 0 0 0 0 0 0 0<br>0 0 0 0 0 0 0 1 0 0 0 0 0 0 0<br>0 0 0 0 0 0 0 1 1 1 1 0 0 0 0<br>0 0 0 0 0 0 0 0 0 0 1 0 0 0 0<br>0 0 0 0 0 0 0 0 0 0 1 0 0 0 0<br>0 0 0 0 0 0 0 0 0 0 1 0 0 0 0<br>0 0 0 0 0 0 0 0 0 0 1 1 1 1 0<br>0 0 0 0 0 0 0 0 0 0 0 0 0 1 0<br>0 0 0 0 0 0 0 0 0 0 0 0 0 4 0<br>运行项目并下载源码<br>cpp<br>运行<br>提取路线<br>有了迷宫，剩下的步骤就很简单了，按照1是走过的路线、3是起点、4是终点的规则以及上下左右分别为wsad字符的规则，写出路线<br>然后汇总成一个总串：ddsssddddsssdssdddddsssddddsssaassssdddsddssddwddssssssdddssssdddss</p>
 <p>再按照sub_940函数的提示，对这个字符串使用md5加密，得到最终flag</p>
-<p>原文链接：<a target="_blank" rel="noopener" href="https://blog.csdn.net/liKeQing1027520/article/details/136788592">https://blog.csdn.net/liKeQing1027520/article/details/136788592</a></p>
+<p>参考<a target="_blank" rel="noopener" href="https://blog.csdn.net/liKeQing1027520/article/details/136788592">https://blog.csdn.net/liKeQing1027520/article/details/136788592</a></p>
 
       
     </div>

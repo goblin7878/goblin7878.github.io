@@ -14,7 +14,7 @@
 <meta property="og:description" content="title: 迷宫问题date: 2026-1-31 题目为攻防世界的reverse_re3、main函数分析main函数十分的简单，说明关键代码都在函数里了 ​ sub_940是需要关键分析的函数，每次循环都会带回返回值赋值给v4，等于1或者-1时都将使循环停止 sub_11B4函数分析双击跟进sub_11B4函数，这个函数也是十分简洁，第5行和第7行的__readfsqword(0x28u)经">
 <meta property="og:locale" content="en_US">
 <meta property="article:published_time" content="2026-02-26T18:52:15.853Z">
-<meta property="article:modified_time" content="2026-03-10T11:27:27.423Z">
+<meta property="article:modified_time" content="2026-03-10T11:36:21.964Z">
 <meta property="article:author" content="John Doe">
 <meta name="twitter:card" content="summary">
   
@@ -125,7 +125,7 @@
 <p>1 1 0 0 0 0 0 0 0 0 0 0 0 0 0<br>1 1 0 3 1 1 1 1 1 0 0 0 0 0 0<br>1 1 0 1 1 0 0 0 1 0 0 0 0 0 0<br>1 1 0 0 0 0 0 0 1 0 0 0 0 0 0<br>1 1 0 1 1 0 0 0 1 1 1 1 1 0 0<br>1 1 0 1 1 0 0 0 0 0 0 0 1 0 0<br>1 1 0 1 1 0 0 0 0 0 0 0 1 0 0<br>1 1 0 1 1 0 0 0 0 0 1 1 1 1 0<br>1 1 0 1 1 0 0 0 0 0 1 0 0 1 0<br>1 1 0 1 1 0 0 0 0 0 1 0 0 0 0<br>1 1 0 1 1 1 1 1 1 0 1 0 1 1 0<br>1 1 0 1 1 1 1 1 1 1 1 1 1 1 0<br>1 1 0 0 0 0 0 0 0 0 0 0 0 4 0<br>1 1 1 1 1 1 1 1 1 1 1 1 1 1 1<br>1 1 1 1 1 1 1 1 1 1 1 1 1 1 1</p>
 <p>0 0 0 0 0 0 0 0 0 0 0 0 0 0 0<br>0 3 1 1 0 0 0 0 0 0 0 0 0 0 0<br>0 0 0 1 0 1 1 1 0 0 0 0 0 0 0<br>0 0 0 1 1 1 0 1 0 0 0 0 0 0 0<br>0 0 0 0 1 0 0 1 0 0 0 0 0 0 0<br>0 1 1 0 1 0 0 1 0 0 0 0 0 0 0<br>0 0 1 1 1 0 0 1 0 0 0 0 0 0 0<br>0 0 0 0 0 0 0 1 0 0 0 0 0 0 0<br>0 0 0 0 0 0 0 1 1 1 1 0 0 0 0<br>0 0 0 0 0 0 0 0 0 0 1 0 0 0 0<br>0 0 0 0 0 0 0 0 0 0 1 0 0 0 0<br>0 0 0 0 0 0 0 0 0 0 1 0 0 0 0<br>0 0 0 0 0 0 0 0 0 0 1 1 1 1 0<br>0 0 0 0 0 0 0 0 0 0 0 0 0 1 0<br>0 0 0 0 0 0 0 0 0 0 0 0 0 4 0<br>运行项目并下载源码<br>cpp<br>运行<br>提取路线<br>有了迷宫，剩下的步骤就很简单了，按照1是走过的路线、3是起点、4是终点的规则以及上下左右分别为wsad字符的规则，写出路线<br>然后汇总成一个总串：ddsssddddsssdssdddddsssddddsssaassssdddsddssddwddssssssdddssssdddss</p>
 <p>再按照sub_940函数的提示，对这个字符串使用md5加密，得到最终flag</p>
-<p>原文链接：<a target="_blank" rel="noopener" href="https://blog.csdn.net/liKeQing1027520/article/details/136788592">https://blog.csdn.net/liKeQing1027520/article/details/136788592</a></p>
+<p>参考<a target="_blank" rel="noopener" href="https://blog.csdn.net/liKeQing1027520/article/details/136788592">https://blog.csdn.net/liKeQing1027520/article/details/136788592</a></p>
 
       
     </div>
